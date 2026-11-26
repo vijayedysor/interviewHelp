@@ -1,599 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NorthLadder — Interview Prep</title>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>React Native Interview Prep – Vijay Gehlot</title>
 <style>
-:root{
-  --bg:#000000;
-  --bg-raised:#0d0d0d;
-  --bg-hover:#161616;
-  --line:#2b2b2b;
-  --line-soft:#1a1a1a;
-  --fg:#f5f5f5;
-  --fg-dim:#9a9a9a;
-  --fg-faint:#5c5c5c;
-  --white:#ffffff;
-  --black:#000000;
-}
-*{box-sizing:border-box;}
-html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden;}
-body{
-  background:var(--bg);
-  color:var(--fg);
-  font-family:'IBM Plex Mono','SF Mono',Consolas,Menlo,monospace;
-  -webkit-font-smoothing:antialiased;
-  line-height:1.5;
-  -webkit-text-size-adjust:100%;
-}
-
-/* ---------- scrollbar ---------- */
-::-webkit-scrollbar{width:10px;height:10px;}
-::-webkit-scrollbar-track{background:var(--bg);}
-::-webkit-scrollbar-thumb{background:var(--line);border-radius:0;}
-::-webkit-scrollbar-thumb:hover{background:var(--fg-faint);}
-
-/* ---------- header ---------- */
-header{
-  border-bottom:1px solid var(--line);
-  padding:28px 32px 24px;
-  position:sticky;
-  top:0;
-  background:rgba(0,0,0,0.92);
-  backdrop-filter:blur(6px);
-  z-index:50;
-}
-.header-inner{max-width:1180px;margin:0 auto;}
-.brand-row{
-  display:flex;
-  align-items:baseline;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:12px;
-}
-.brand{
-  display:flex;
-  align-items:baseline;
-  gap:10px;
-}
-.brand .prompt{color:var(--fg-faint);font-size:15px;}
-.brand h1{
-  font-size:18px;
-  font-weight:600;
-  letter-spacing:0.02em;
-  margin:0;
-  color:var(--white);
-}
-.brand h1 .cursor{
-  display:inline-block;
-  width:8px;height:16px;
-  background:var(--white);
-  margin-left:2px;
-  vertical-align:middle;
-  animation:blink 1.1s steps(1) infinite;
-}
-@keyframes blink{50%{opacity:0;}}
-.stat-strip{
-  display:flex;
-  gap:22px;
-  font-size:12px;
-  color:var(--fg-dim);
-  letter-spacing:0.03em;
-}
-.stat-strip b{color:var(--white);font-weight:600;}
-
-.search-row{
-  margin-top:20px;
-  display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap;
-}
-.search-box{
-  flex:1 1 200px;
-  position:relative;
-  min-width:0;
-}
-.search-box input{
-  width:100%;
-  background:var(--bg-raised);
-  border:1px solid var(--line);
-  color:var(--fg);
-  font-family:inherit;
-  font-size:16px;
-  padding:12px 14px 12px 34px;
-  outline:none;
-  transition:border-color .15s ease;
-}
-.search-box input::placeholder{color:var(--fg-faint);}
-.search-box input:focus{border-color:var(--fg-dim);}
-.search-box::before{
-  content:"›_";
-  position:absolute;
-  left:12px;top:50%;
-  transform:translateY(-50%);
-  color:var(--fg-faint);
-  font-size:13px;
-  pointer-events:none;
-}
-.clear-btn{
-  background:transparent;
-  border:1px solid var(--line);
-  color:var(--fg-dim);
-  font-family:inherit;
-  font-size:12px;
-  padding:12px 16px;
-  cursor:pointer;
-  white-space:nowrap;
-  transition:all .15s ease;
-}
-.clear-btn:hover{border-color:var(--fg-dim);color:var(--fg);}
-
-.result-count{
-  margin-top:10px;
-  font-size:12px;
-  color:var(--fg-faint);
-  letter-spacing:0.02em;
-}
-.result-count b{color:var(--fg-dim);}
-
-/* ---------- layout ---------- */
-.layout{
-  max-width:1180px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:230px 1fr;
-  gap:0;
-}
-@media (max-width:860px){
-  .layout{grid-template-columns:1fr;}
-  .sidebar{
-    position:static;
-    border-right:none;
-    border-bottom:1px solid var(--line);
-    max-height:none;
-    padding:10px 0;
-    background:var(--bg);
-  }
-  .sidebar .eyebrow{display:none;}
-  #catList{
-    display:flex;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    gap:6px;
-    padding:0 12px;
-    scrollbar-width:thin;
-  }
-  .cat-btn{
-    width:auto;
-    flex:0 0 auto;
-    border:1px solid var(--line);
-    border-left:1px solid var(--line);
-    padding:7px 12px;
-    font-size:12px;
-    white-space:nowrap;
-    background:var(--bg-raised);
-  }
-  .cat-btn.active{border-color:var(--white);border-left-color:var(--white);}
-  .cat-btn .n{margin-left:6px;}
-}
-
-/* ---------- sidebar ---------- */
-.sidebar{
-  border-right:1px solid var(--line);
-  padding:24px 16px 60px 0;
-  position:sticky;
-  top:132px;
-  align-self:start;
-  max-height:calc(100vh - 132px);
-  overflow-y:auto;
-}
-.sidebar .eyebrow{
-  font-size:11px;
-  color:var(--fg-faint);
-  text-transform:uppercase;
-  letter-spacing:0.12em;
-  padding:0 16px 10px;
-}
-.cat-btn{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  width:100%;
-  background:transparent;
-  border:none;
-  border-left:2px solid transparent;
-  color:var(--fg-dim);
-  font-family:inherit;
-  font-size:13px;
-  text-align:left;
-  padding:9px 16px;
-  cursor:pointer;
-  transition:all .12s ease;
-}
-.cat-btn:hover{color:var(--fg);background:var(--bg-hover);}
-.cat-btn.active{
-  color:var(--white);
-  border-left-color:var(--white);
-  background:var(--bg-hover);
-}
-.cat-btn .n{
-  font-size:11px;
-  color:var(--fg-faint);
-  font-variant-numeric:tabular-nums;
-}
-.cat-btn.active .n{color:var(--fg-dim);}
-
-/* ---------- main ---------- */
-main{padding:28px 24px 100px;min-width:0;}
-.cat-group{margin-bottom:8px;}
-.cat-heading{
-  display:flex;
-  align-items:baseline;
-  gap:10px;
-  margin:36px 0 14px;
-  padding-bottom:8px;
-  border-bottom:1px solid var(--line-soft);
-}
-.cat-heading:first-child{margin-top:0;}
-.cat-heading .idx{
-  color:var(--fg-faint);
-  font-size:12px;
-}
-.cat-heading h2{
-  font-size:15px;
-  font-weight:600;
-  color:var(--white);
-  margin:0;
-  letter-spacing:0.01em;
-}
-.cat-heading .count{
-  color:var(--fg-faint);
-  font-size:12px;
-  margin-left:auto;
-}
-
-.card{
-  border:1px solid var(--line-soft);
-  margin-bottom:8px;
-  background:var(--bg-raised);
-  transition:border-color .12s ease;
-}
-.card:hover{border-color:var(--line);}
-.card.open{border-color:var(--fg-faint);}
-
-.card-q{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  width:100%;
-  background:transparent;
-  border:none;
-  color:var(--fg);
-  font-family:inherit;
-  font-size:14px;
-  text-align:left;
-  padding:14px 16px;
-  cursor:pointer;
-}
-.card-q .qmark{
-  color:var(--fg-faint);
-  font-size:13px;
-  flex-shrink:0;
-  width:14px;
-}
-.card-q .qtext{flex:1;}
-.card-q .chev{
-  color:var(--fg-faint);
-  font-size:12px;
-  transition:transform .15s ease;
-  flex-shrink:0;
-}
-.card.open .card-q .chev{transform:rotate(90deg);color:var(--fg);}
-
-.card-body{
-  max-height:0;
-  overflow:hidden;
-  transition:max-height .22s ease;
-}
-.card.open .card-body{max-height:4000px;}
-.card-body-inner{
-  padding:0 16px 18px 42px;
-  border-top:1px solid var(--line-soft);
-  padding-top:14px;
-}
-.answer{
-  color:var(--fg-dim);
-  font-size:13.5px;
-  line-height:1.65;
-  margin:0 0 12px;
-}
-.example-label{
-  font-size:10.5px;
-  text-transform:uppercase;
-  letter-spacing:0.1em;
-  color:var(--fg-faint);
-  margin:0 0 8px;
-}
-pre{
-  background:#000;
-  border:1px solid var(--line-soft);
-  padding:12px 14px;
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-  margin:0;
-  font-size:12.5px;
-  line-height:1.6;
-  color:#e6e6e6;
-  max-width:100%;
-}
-pre code{font-family:inherit;white-space:pre;}
-
-/* ---------- mobile tuning ---------- */
-@media (max-width:640px){
-  header{padding:16px 16px 14px;}
-  .brand h1{font-size:15px;}
-  .brand .prompt{font-size:13px;}
-  .stat-strip{font-size:11px;gap:14px;}
-  .search-box input{padding:11px 12px 11px 30px;font-size:16px;}
-  .clear-btn{padding:11px 12px;font-size:11px;}
-  main{padding:16px 12px 80px;}
-  .cat-heading{margin:26px 0 12px;}
-  .cat-heading h2{font-size:14px;}
-  .card-q{padding:12px 12px;font-size:13.5px;gap:8px;}
-  .card-body-inner{padding:12px 12px 16px 12px;}
-  .answer{font-size:13px;}
-  pre{font-size:11.5px;padding:10px 10px;}
-  footer{padding:18px 16px;font-size:10px;}
-}
-.plain-example{
-  background:#000;
-  border-left:2px solid var(--fg-faint);
-  padding:10px 14px;
-  font-size:13px;
-  color:var(--fg-dim);
-  font-style:italic;
-  line-height:1.6;
-}
-
-mark{
-  background:var(--white);
-  color:var(--black);
-  padding:0 1px;
-}
-
-.empty-state{
-  padding:80px 20px;
-  text-align:center;
-  color:var(--fg-faint);
-}
-.empty-state .glyph{font-size:26px;margin-bottom:14px;color:var(--fg-dim);}
-.empty-state p{margin:4px 0;font-size:13px;}
-
-footer{
-  border-top:1px solid var(--line);
-  padding:24px 32px;
-  text-align:center;
-  color:var(--fg-faint);
-  font-size:11px;
-  letter-spacing:0.03em;
-}
-
-kbd{
-  background:var(--bg-hover);
-  border:1px solid var(--line);
-  padding:1px 6px;
-  font-size:11px;
-  color:var(--fg-dim);
-}
-
-@media (prefers-reduced-motion: reduce){
-  *{animation:none !important;transition:none !important;}
-}
-</style>
-</head>
-<body>
-
-<header>
-  <div class="header-inner">
-    <div class="brand-row">
-      <div class="brand">
-        <span class="prompt">$</span>
-        <h1>northladder<span style="color:var(--fg-faint)">@</span>interview-prep<span class="cursor"></span></h1>
-      </div>
-      <div class="stat-strip">
-        <span><b id="statTotal">0</b> questions</span>
-        <span><b id="statCats">0</b> categories</span>
-      </div>
-    </div>
-    <div class="search-row">
-      <div class="search-box">
-        <input id="searchInput" type="text" placeholder="grep -i 'closures, useMemo, sprint planning, WCAG...'" autocomplete="off">
-      </div>
-      <button class="clear-btn" id="clearBtn">clear ×</button>
-    </div>
-    <div class="result-count" id="resultCount"></div>
-  </div>
-</header>
-
-<div class="layout">
-  <aside class="sidebar">
-    <div class="eyebrow">// categories</div>
-    <div id="catList"></div>
-  </aside>
-
-  <main id="main">
-    <!-- populated by JS -->
-  </main>
-</div>
-
-<footer>
-  press <kbd>/</kbd> to search — built for the NorthLadder frontend leadership loop
-</footer>
-
-<script id="qdata" type="application/json">[{"cat": "HR Screening", "q": "Tell me about yourself.", "a": "Keep it to a 60-90 second arc: current role and scope, one or two career-defining wins, then why you're looking now. Lead with impact, not a chronological resume dump.", "code": "Example answer: \"I'm a frontend engineer with 7 years' experience, the last 3 leading a 5-person team at a fintech startup. I rebuilt our checkout flow into a component library that cut new-feature time by 40%, and I mentor 2 junior devs. I'm looking for a role with more architectural ownership across a larger product surface -- which is why NorthLadder's platform rebuild caught my eye.\"", "lang": ""}, {"cat": "HR Screening", "q": "Why are you interested in NorthLadder?", "a": "Show you researched the company: their product, tech stack, or a recent challenge (scaling, a migration, a market move), and connect it to what you want to do next.", "code": "Example answer: \"I saw your engineering blog post about migrating to the Next.js App Router -- I led a similar migration and know the pain points around data fetching patterns. I want to join a team that's actively modernizing rather than maintaining legacy code, and your emphasis on a shared design system matches the systems-thinking work I enjoy.\"", "lang": ""}, {"cat": "HR Screening", "q": "Why are you leaving your current role?", "a": "Stay forward-looking and specific: what you want next that your current role can't offer (scope, tech, team size), never trash-talk a manager or company.", "code": "Example answer: \"I've taken our frontend architecture as far as I can at our current scale -- we're a 4-person team on one product. I want to work on a platform serving more users with a larger engineering org, where I can grow into cross-team architectural decisions.\"", "lang": ""}, {"cat": "HR Screening", "q": "What kind of engineering culture do you enjoy?", "a": "Describe concrete practices, not adjectives: code review norms, how decisions get made, how failure is handled -- and tie it to evidence from your own experience.", "code": "Example answer: \"I thrive where code review is a teaching tool, not a gate -- comments explain the 'why', not just 'fix this'. I also like blameless postmortems; after a production bug I once ran one and we came out with a better deploy checklist, not a scapegoat.\"", "lang": ""}, {"cat": "HR Screening", "q": "Why should we hire you for a frontend leadership role?", "a": "Pair a technical credibility point with a people-leadership point, and back both with a measurable result.", "code": "Example answer: \"I combine deep React/Next.js expertise with two years of directly managing engineers -- I've shipped a design system used by 6 teams, and grown two juniors into mid-level engineers via structured 1:1s and stretch assignments. I can both set technical direction and develop the people executing it.\"", "lang": ""}, {"cat": "HR Screening", "q": "What has been your biggest achievement in the last two years?", "a": "Use a single, quantified story with your specific contribution called out, not a team accomplishment described in 'we' language alone.", "code": "Example answer: \"I led the migration of our legacy CRA app to Next.js with incremental static regeneration, cutting median page load from 3.2s to 900ms and lifting our Lighthouse SEO score from 62 to 96 -- which fed directly into a 15% signup conversion lift.\"", "lang": ""}, {"cat": "HR Screening", "q": "Have you managed engineers directly?", "a": "Answer with reporting-line facts (headcount, levels, duration) then one concrete management action, not just responsibilities.", "code": "Example answer: \"Yes -- 3 direct reports (2 mid-level, 1 junior) for the past 18 months, including performance reviews and career-ladder conversations. I put one engineer on a growth plan around code-review quality and she was promoted two quarters later.\"", "lang": ""}, {"cat": "HR Screening", "q": "How many people have you mentored or led?", "a": "Give a real number and distinguish formal reports from informal mentoring so the interviewer can calibrate scope.", "code": "Example answer: \"3 direct reports currently, plus I've formally mentored 5 engineers across two companies through onboarding buddy programs and a frontend guild I started.\"", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you manage a team of frontend engineers?", "a": "Describe your operating rhythm: weekly 1:1s, sprint planning, code review standards, and how you balance hands-on coding with unblocking others.", "code": "Example: weekly 1:1s focused on career + blockers (not status), async standups in Slack, a rotating 'tech lead of the week' for code review triage, and I keep 20% of my week coding to stay credible on architecture decisions.", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you handle low-performing developers?", "a": "Show a structured process: clarify expectations, give specific feedback with examples, set a time-bound improvement plan, escalate if no change.", "code": "Example: \"I sat with an underperforming dev, showed 3 specific PRs where scope wasn't met, agreed on a 30-day plan with weekly checkpoints and pairing sessions. He improved on 2 of 3 metrics; we extended 2 more weeks and he hit the bar.\"", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you mentor junior engineers?", "a": "Talk about pairing, stretch tickets slightly above their level, and code review as teaching -- with a concrete before/after result.", "code": "Example: I pair on the first ticket of a new area, then hand off similar tickets solo with review. One junior went from needing line-by-line guidance to owning our form-validation library in 4 months.", "lang": ""}, {"cat": "Leadership & Management", "q": "What do you expect during code reviews?", "a": "Cover both mechanics (small PRs, tests, CI green) and tone (explain the why, suggest don't dictate, approve with nits rather than blocking on style).", "code": "Checklist: PR < 400 lines diff, tests cover the new branch logic, no console.log left in, comments explain reasoning not just 'change this', and reviewer responds within 4 business hours to keep flow moving.", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you resolve technical disagreements?", "a": "Show a decision framework: get both sides to state tradeoffs in writing, use data or a small spike when possible, escalate to a tie-breaker only as last resort.", "code": "Example: two engineers disagreed on Redux vs Context+useReducer. I had each write a 1-page tradeoff doc, we time-boxed a half-day spike on both, and picked Context+useReducer because our state was shallow and it cut a dependency.", "lang": ""}, {"cat": "Leadership & Management", "q": "Tell us about a time you disagreed with Product or Design.", "a": "Use a STAR structure: the disagreement, how you made your case with data/user impact, and the resolution -- even if you didn't get your way.", "code": "Example: Design wanted a custom date picker; I flagged it would cost 2 sprints and hurt accessibility. I prototyped an accessible library-based alternative in a day to show it was viable, and we shipped it instead -- saving ~8 engineering days.", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you estimate frontend work?", "a": "Mention breaking stories into tasks, referencing historical velocity, and flagging unknowns (design gaps, third-party API risk) as separate risk buffers rather than padding every estimate blindly.", "code": "Example: I break a feature into UI states (empty/loading/error/success), estimate each against similar past tickets, then add a fixed 20% buffer only for tasks touching unfamiliar APIs.", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you handle deadline pressure?", "a": "Show you triage scope rather than silently cutting quality -- negotiate what ships now vs later, and communicate early rather than at the deadline.", "code": "Example: two days before a launch, I identified 3 nice-to-have polish items, got PM sign-off to cut them, and used the recovered time to fix a checkout bug that would have blocked payments.", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you prioritize bugs vs new features?", "a": "Use a severity/impact framework (data loss or blocked revenue beats cosmetic issues) and describe how you communicate the tradeoff to stakeholders.", "code": "Framework: P0 (data loss, broken checkout) fixed same day; P1 (major flow degraded) fixed within the sprint; P2 (cosmetic) goes in the backlog and gets triaged against feature work each planning session.", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you keep engineers motivated?", "a": "Talk about autonomy, visible impact, and growth opportunities -- not just perks or praise.", "code": "Example: I let engineers pick which of two equally-valued tickets to own, share user-facing impact metrics in team channel after launches, and rotate 'first pick' on interesting greenfield work.", "lang": ""}, {"cat": "Leadership & Management", "q": "Walk us through your sprint planning process.", "a": "Describe backlog grooming before the meeting, capacity planning against PTO/on-call, and how stories get broken down and estimated live.", "code": "Flow: groom backlog Thursday, estimate top items async via planning poker, Monday planning meeting confirms capacity (subtract PTO/on-call), commit to a sprint goal plus stretch items, not just a task list.", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you estimate React features?", "a": "Break by UI states and integration points, and call out anything touching new libraries or backend contracts as higher risk.", "code": "Example: a 'user profile edit' feature = form UI (1pt) + validation (1pt) + API integration (2pt, unknown backend contract) + optimistic update/error states (2pt) = 6pt total, flagged as risky due to the unknown contract.", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you identify risks early?", "a": "Mention spikes for unknowns, dependency mapping (backend, design, third-party), and flagging risk in planning rather than mid-sprint.", "code": "Example: before committing to a payments integration story, I ran a half-day spike against the sandbox API and found a webhook limitation that reshaped our estimate before we committed the sprint.", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you communicate delays?", "a": "Communicate early with the reason, the new date, and the mitigation -- not just an apology after the deadline passes.", "code": "Example message: \"Heads up -- the API contract for checkout changed mid-sprint, pushing delivery from Thu to Mon. I've descoped the retry-logic polish to protect the date if needed.\"", "lang": ""}, {"cat": "Leadership & Management", "q": "How do you split large frontend stories?", "a": "Vertical slices by user-visible state (empty/loading/success/error) or by page section, so each slice ships independent value rather than horizontal layers that can't ship alone.", "code": "Example: split 'build dashboard' into: static layout shell, live data for top widget, remaining widgets, empty/error states, and polish -- each independently shippable behind a feature flag.", "lang": ""}, {"cat": "JavaScript", "q": "Explain the Event Loop.", "a": "JS is single-threaded. The call stack runs synchronous code; async callbacks go into task queues. The event loop checks: is the stack empty? If yes, pull the next task from the microtask queue (fully drained) then one macrotask, and repeat.", "code": "console.log('1');\nsetTimeout(() => console.log('2'), 0);\nPromise.resolve().then(() => console.log('3'));\nconsole.log('4');\n// Output: 1, 4, 3, 2\n// sync code first, then microtasks (promises), then macrotasks (setTimeout)", "lang": "javascript"}, {"cat": "JavaScript", "q": "What are microtasks and macrotasks?", "a": "Microtasks (Promise.then, queueMicrotask, MutationObserver) run immediately after the current stack empties and the queue is drained fully before rendering. Macrotasks (setTimeout, setInterval, I/O, UI events) run one per event-loop tick.", "code": "setTimeout(() => console.log('macro'), 0);\nqueueMicrotask(() => console.log('micro'));\n// 'micro' logs before 'macro' every time", "lang": "javascript"}, {"cat": "JavaScript", "q": "Difference between == and ===.", "a": "=== compares value and type with no coercion (strict equality). == coerces operands to a common type before comparing, which causes surprising results -- prefer === by default.", "code": "0 == '0'      // true  (coerced)\n0 === '0'     // false (different types)\nnull == undefined   // true\nnull === undefined  // false", "lang": "javascript"}, {"cat": "JavaScript", "q": "Explain closures with a real-world example.", "a": "A closure is a function that retains access to its defining scope's variables even after that outer function has returned. Used for data privacy, memoization, and factory functions.", "code": "function createCounter() {\n  let count = 0;\n  return () => ++count; // 'count' stays alive via closure\n}\nconst counter = createCounter();\ncounter(); // 1\ncounter(); // 2 -- private state, no external access to 'count'", "lang": "javascript"}, {"cat": "JavaScript", "q": "What is lexical scope?", "a": "Variable lookup is determined by where a function is physically written in the code, not by where it's called from. Inner functions can access outer variables based on nesting at write-time.", "code": "const x = 10;\nfunction outer() {\n  const y = 20;\n  function inner() {\n    console.log(x, y); // resolves via lexical (write-time) scope, not call-time\n  }\n  inner();\n}", "lang": "javascript"}, {"cat": "JavaScript", "q": "Explain hoisting.", "a": "Declarations are moved to the top of their scope during compilation. var declarations are hoisted and initialized as undefined; let/const are hoisted but stay in a 'temporal dead zone' until their line executes; function declarations are hoisted fully.", "code": "console.log(a); // undefined (var hoisted)\nvar a = 1;\n\nconsole.log(b); // ReferenceError (temporal dead zone)\nlet b = 2;", "lang": "javascript"}, {"cat": "JavaScript", "q": "How does 'this' work?", "a": "'this' is determined by how a function is called, not where it's defined: object.method() binds to the object, a plain call binds to undefined (strict mode) or global, arrow functions inherit 'this' lexically from their enclosing scope.", "code": "const obj = {\n  name: 'a',\n  regular() { return this.name; },       // 'a' -- called as obj.regular()\n  arrow: () => this?.name,                // undefined -- inherits outer 'this'\n};", "lang": "javascript"}, {"cat": "JavaScript", "q": "call(), apply(), and bind().", "a": "All three set the 'this' context for a function. call() invokes immediately with args listed individually, apply() invokes immediately with args as an array, bind() returns a new function with 'this' permanently fixed, invoked later.", "code": "function greet(greeting) { return greeting + ', ' + this.name; }\ngreet.call({name:'Sam'}, 'Hi');      // 'Hi, Sam' -- invokes now\ngreet.apply({name:'Sam'}, ['Hi']);   // 'Hi, Sam' -- args as array\nconst bound = greet.bind({name:'Sam'});\nbound('Hi');                          // invoked later, 'this' locked", "lang": "javascript"}, {"cat": "JavaScript", "q": "Deep copy vs shallow copy.", "a": "A shallow copy duplicates the top-level structure but nested objects still share references with the original. A deep copy recursively clones every nested level so the two are fully independent.", "code": "const original = { a: 1, nested: { b: 2 } };\nconst shallow = { ...original };\nshallow.nested.b = 99; // mutates original.nested.b too!\n\nconst deep = structuredClone(original); // true independent copy", "lang": "javascript"}, {"cat": "JavaScript", "q": "Debounce vs throttle.", "a": "Debounce delays execution until a pause in events (fires once after activity stops -- good for search-as-you-type). Throttle guarantees execution at most once per interval regardless of event frequency -- good for scroll/resize handlers.", "code": "function debounce(fn, delay) {\n  let t;\n  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };\n}\nfunction throttle(fn, limit) {\n  let wait = false;\n  return (...args) => {\n    if (wait) return;\n    fn(...args);\n    wait = true;\n    setTimeout(() => (wait = false), limit);\n  };\n}", "lang": "javascript"}, {"cat": "JavaScript", "q": "What is currying?", "a": "Currying transforms a function of multiple arguments into a sequence of functions each taking one argument, enabling partial application and reusable configured functions.", "code": "const add = a => b => c => a + b + c;\nadd(1)(2)(3); // 6\nconst add5 = add(5);\nadd5(2)(3);   // 10 -- reusable partial application", "lang": "javascript"}, {"cat": "JavaScript", "q": "Explain promises internally.", "a": "A Promise is a state machine: pending -> fulfilled or rejected (once, irreversibly). .then/.catch register callbacks queued as microtasks once the state settles, enabling chaining that flattens nested async callbacks.", "code": "new Promise((resolve, reject) => {\n  setTimeout(() => resolve('done'), 100);\n})\n  .then(v => v + '!')\n  .then(console.log) // 'done!'\n  .catch(err => console.error(err));", "lang": "javascript"}, {"cat": "JavaScript", "q": "How does async/await work?", "a": "async/await is syntactic sugar over Promises: 'await' pauses the async function (without blocking the thread) until the awaited Promise settles, letting you write async code with synchronous-looking control flow, including try/catch for errors.", "code": "async function getUser(id) {\n  try {\n    const res = await fetch(`/api/users/${id}`);\n    if (!res.ok) throw new Error('failed');\n    return await res.json();\n  } catch (err) {\n    console.error(err);\n  }\n}", "lang": "javascript"}, {"cat": "JavaScript", "q": "Explain generators.", "a": "Generators (function*) produce an iterator that can pause and resume execution via 'yield', letting you produce values lazily one at a time -- useful for infinite sequences or custom iteration.", "code": "function* idGenerator() {\n  let id = 1;\n  while (true) yield id++;\n}\nconst gen = idGenerator();\ngen.next().value; // 1\ngen.next().value; // 2", "lang": "javascript"}, {"cat": "JavaScript", "q": "What are WeakMap and WeakSet?", "a": "Like Map/Set but keys (WeakMap) or values (WeakSet) must be objects and are held weakly, so entries can be garbage-collected once nothing else references the key -- ideal for attaching metadata to objects without causing memory leaks.", "code": "const cache = new WeakMap();\nfunction process(obj) {\n  if (cache.has(obj)) return cache.get(obj);\n  const result = expensiveCalc(obj);\n  cache.set(obj, result); // auto-cleared when obj is garbage collected\n  return result;\n}", "lang": "javascript"}, {"cat": "JavaScript", "q": "Event bubbling and event delegation.", "a": "Bubbling means an event fires on the target then propagates up through its ancestors. Delegation exploits this by attaching one listener on a common parent instead of many on each child, checking event.target to react selectively -- efficient for dynamic lists.", "code": "document.getElementById('list').addEventListener('click', (e) => {\n  if (e.target.matches('li')) {\n    console.log('clicked', e.target.textContent);\n  }\n}); // one listener handles all current and future <li> children", "lang": "javascript"}, {"cat": "React", "q": "Explain React rendering.", "a": "When state or props change, React calls the component function again to produce a new element tree ('render'), diffs it against the previous tree (reconciliation), and applies only the minimal DOM mutations needed ('commit').", "code": "function Counter() {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(c => c + 1)}>{count}</button>;\n} // clicking re-runs Counter(); only the text node updates in the DOM", "lang": "jsx"}, {"cat": "React", "q": "Virtual DOM vs Real DOM.", "a": "The Virtual DOM is a lightweight JS object tree representing UI. React diffs the new virtual tree against the previous one and batches only the necessary real DOM operations, which are expensive, instead of re-rendering the whole page.", "code": "// Virtual DOM element -- just a plain JS object\n{ type: 'button', props: { onClick: fn, children: '0' } }", "lang": "javascript"}, {"cat": "React", "q": "How does React reconciliation work?", "a": "React compares elements by type and position (or 'key' for lists): same type -> update props in place and recurse into children; different type -> tear down the old subtree and mount a new one. Keys let React track identity across list reorders.", "code": "// Without stable keys, React may re-mount/re-order items incorrectly\n{items.map(item => <Row key={item.id} {...item} />)} // key={item.id}, never key={index} for reorderable lists", "lang": "jsx"}, {"cat": "React", "q": "When does React re-render?", "a": "A component re-renders when its own state changes, when it receives new props, when its parent re-renders (unless memoized), or when a consumed context value changes.", "code": "const Child = React.memo(function Child({ value }) {\n  console.log('child render');\n  return <div>{value}</div>;\n}); // re-renders only when 'value' prop actually changes", "lang": "jsx"}, {"cat": "React", "q": "useMemo vs useCallback.", "a": "useMemo memoizes a computed value; useCallback memoizes a function reference. Both skip recomputation unless dependencies change, and are used to avoid expensive recalculation or to keep referential equality stable for memoized children.", "code": "const sorted = useMemo(() => items.slice().sort(cmp), [items]);\nconst handleClick = useCallback(() => onSelect(id), [id, onSelect]);", "lang": "jsx"}, {"cat": "React", "q": "Context API vs Redux.", "a": "Context passes data through the tree without prop drilling but re-renders every consumer on any value change and has no built-in middleware/devtools. Redux centralizes state with predictable updates, middleware (thunks/sagas), and time-travel debugging -- better for complex, frequently-updated, cross-cutting state.", "code": "// Context: fine for rarely-changing global data like theme/auth\nconst ThemeContext = createContext('dark');\n// Redux/Zustand: better for frequently updated, complex app state with selectors", "lang": "jsx"}, {"cat": "React", "q": "React Query vs Redux.", "a": "React Query (TanStack Query) is purpose-built for server-state: caching, refetching, invalidation, background sync. Redux is for client-state that isn't naturally tied to a server request. Most modern apps use React Query for data fetching and a lighter tool (Context/Zustand) for UI state.", "code": "const { data, isLoading } = useQuery({\n  queryKey: ['user', id],\n  queryFn: () => fetch(`/api/users/${id}`).then(r => r.json()),\n}); // caching, retries, and refetch-on-focus handled automatically", "lang": "jsx"}, {"cat": "React", "q": "Custom Hooks.", "a": "A custom hook is a function starting with 'use' that composes built-in hooks to extract and reuse stateful logic across components without changing the component tree.", "code": "function useDebouncedValue(value, delay) {\n  const [debounced, setDebounced] = useState(value);\n  useEffect(() => {\n    const t = setTimeout(() => setDebounced(value), delay);\n    return () => clearTimeout(t);\n  }, [value, delay]);\n  return debounced;\n}", "lang": "jsx"}, {"cat": "React", "q": "Error Boundaries.", "a": "A class component implementing componentDidCatch/getDerivedStateFromError that catches JS errors thrown during rendering in its child tree and renders a fallback UI instead of crashing the whole app. They don't catch errors in event handlers or async code.", "code": "class ErrorBoundary extends React.Component {\n  state = { hasError: false };\n  static getDerivedStateFromError() { return { hasError: true }; }\n  render() {\n    return this.state.hasError ? <Fallback /> : this.props.children;\n  }\n}", "lang": "jsx"}, {"cat": "React", "q": "Suspense.", "a": "Suspense lets a component 'wait' for something (lazy-loaded code, or data with a Suspense-compatible fetcher) by showing a fallback UI until the child is ready, decoupling loading-state UI from the component tree.", "code": "const ProfilePage = React.lazy(() => import('./ProfilePage'));\n<Suspense fallback={<Spinner />}>\n  <ProfilePage />\n</Suspense>", "lang": "jsx"}, {"cat": "React", "q": "Concurrent Rendering.", "a": "React can prepare multiple versions of the UI and interrupt a low-priority render (e.g. a big list update) to handle a high-priority one (like a keypress) first, keeping the UI responsive -- enabled via startTransition/useTransition.", "code": "const [isPending, startTransition] = useTransition();\nfunction handleChange(e) {\n  setQuery(e.target.value);            // urgent\n  startTransition(() => setResults(search(e.target.value))); // can be interrupted\n}", "lang": "jsx"}, {"cat": "React", "q": "Server Components.", "a": "React Server Components render on the server only, ship zero JS to the client for that component, and can access backend resources (DB, filesystem) directly -- reducing bundle size. They can't use hooks like useState or browser APIs; interactive parts stay Client Components marked with 'use client'.", "code": "// app/page.tsx -- Server Component by default in Next.js App Router\nasync function Page() {\n  const posts = await db.query('SELECT * FROM posts'); // runs on server only\n  return <PostList posts={posts} />;\n}", "lang": "jsx"}, {"cat": "React", "q": "Controlled vs uncontrolled components.", "a": "A controlled input's value is driven entirely by React state (single source of truth, easy validation). An uncontrolled input keeps its own internal DOM state, read via a ref only when needed -- simpler for basic forms, less re-render overhead.", "code": "// Controlled\n<input value={value} onChange={e => setValue(e.target.value)} />\n// Uncontrolled\nconst ref = useRef();\n<input ref={ref} defaultValue=\"hi\" /> // read ref.current.value on submit", "lang": "jsx"}, {"cat": "React", "q": "HOCs vs Render Props vs Hooks.", "a": "All three share logic across components. HOCs wrap a component to inject props (can cause wrapper hell and prop naming collisions). Render props pass a function as a child to control what's rendered (verbose JSX nesting). Hooks extract logic into a plain function with no wrapping component -- the modern preferred approach.", "code": "// HOC\nconst withAuth = (Comp) => (props) => user ? <Comp {...props}/> : <Login/>;\n// Render prop\n<DataProvider render={data => <List data={data}/>} />\n// Hook (preferred)\nfunction List() { const data = useData(); return <ul>{...}</ul>; }", "lang": "jsx"}, {"cat": "React", "q": "How would you build a reusable component library?", "a": "Start from design tokens (color/spacing/type), build primitives (Button, Input) with a consistent variant API, document in Storybook, enforce accessibility and tests per component, and version/publish via a monorepo package so consuming apps pin versions.", "code": "// consistent variant API across the whole library\n<Button variant=\"primary\" size=\"md\" />\n<Button variant=\"ghost\" size=\"sm\" />", "lang": "jsx"}, {"cat": "React", "q": "Core Web Vitals.", "a": "LCP (Largest Contentful Paint, loading speed, target <2.5s), INP (Interaction to Next Paint, responsiveness, target <200ms), and CLS (Cumulative Layout Shift, visual stability, target <0.1) -- Google's key UX metrics that also affect SEO ranking.", "code": "// Reserve space to prevent CLS\n<img src=\"hero.jpg\" width={800} height={400} alt=\"\" /> // fixed aspect ratio avoids layout shift on load", "lang": "jsx"}, {"cat": "Next.js", "q": "SSR vs CSR vs SSG vs ISR.", "a": "CSR ships an empty shell and renders client-side (fast to host, slow first paint, poor SEO). SSR renders HTML per-request on the server (fresh data, slower TTFB). SSG pre-renders at build time (fastest, but data can go stale). ISR combines SSG with periodic background regeneration for near-static speed with fresher data.", "code": "// ISR: regenerate this page in the background at most every 60s\nexport const revalidate = 60;", "lang": "javascript"}, {"cat": "Next.js", "q": "Why use Next.js?", "a": "It gives React apps file-based routing, hybrid rendering (SSR/SSG/ISR/CSR per route), built-in image/font optimization, API routes, and a production-ready build pipeline out of the box -- removing a lot of infra decisions a hand-rolled React app would need.", "code": "", "lang": ""}, {"cat": "Next.js", "q": "App Router vs Pages Router.", "a": "App Router (Next 13+, /app) uses React Server Components by default, nested layouts, and streaming; Pages Router (/pages) is the older client-rendered-by-default model with getServerSideProps/getStaticProps for data. App Router is the current recommended default for new projects.", "code": "app/\n  layout.tsx     // shared shell, persists across navigation\n  page.tsx       // route content\n  loading.tsx    // automatic Suspense fallback", "lang": "text"}, {"cat": "Next.js", "q": "Dynamic Routing.", "a": "File or folder names in brackets create parameterized routes; the App Router reads the param via the page's props, and generateStaticParams can pre-render known values at build time.", "code": "// app/blog/[slug]/page.tsx\nexport default function Post({ params }: { params: { slug: string } }) {\n  return <h1>{params.slug}</h1>;\n}", "lang": "jsx"}, {"cat": "Next.js", "q": "Image Optimization.", "a": "next/image automatically serves resized, modern-format (WebP/AVIF) images, lazy-loads offscreen images, and requires width/height (or fill) to prevent layout shift -- all without a manual image pipeline.", "code": "import Image from 'next/image';\n<Image src=\"/hero.jpg\" width={800} height={400} alt=\"Hero\" priority />", "lang": "jsx"}, {"cat": "Next.js", "q": "Middleware.", "a": "Code that runs on the Edge before a request completes routing -- used for auth checks, redirects, A/B test bucketing, or header rewriting, without needing a full page render.", "code": "// middleware.ts\nexport function middleware(req) {\n  const token = req.cookies.get('token');\n  if (!token) return NextResponse.redirect(new URL('/login', req.url));\n}\nexport const config = { matcher: '/dashboard/:path*' };", "lang": "javascript"}, {"cat": "Next.js", "q": "API Routes.", "a": "Route handlers (app/api/.../route.ts) let you build backend endpoints inside the same Next.js project, colocated with the frontend -- useful for BFF patterns, webhooks, or proxying third-party APIs.", "code": "// app/api/users/route.ts\nexport async function GET() {\n  const users = await db.user.findMany();\n  return Response.json(users);\n}", "lang": "javascript"}, {"cat": "Next.js", "q": "SEO optimization.", "a": "Use the Metadata API for title/description/OG tags, server-render or statically generate content-heavy pages so crawlers see real HTML, generate a sitemap.xml and robots.txt, and optimize Core Web Vitals since they affect ranking.", "code": "export const metadata = {\n  title: 'Product | NorthLadder',\n  description: 'Buy the best product',\n  openGraph: { images: ['/og.png'] },\n};", "lang": "javascript"}, {"cat": "Next.js", "q": "Lazy loading.", "a": "Defer loading non-critical code or assets until they're needed, shrinking the initial JS bundle -- via next/dynamic for components and next/image's built-in lazy loading for offscreen images.", "code": "import dynamic from 'next/dynamic';\nconst Chart = dynamic(() => import('./Chart'), { ssr: false, loading: () => <Spinner /> });", "lang": "jsx"}, {"cat": "Next.js", "q": "Route Prefetching.", "a": "Next.js automatically prefetches linked routes in the background when a <Link> enters the viewport, so navigation feels instant since code and data are often already cached by click time.", "code": "<Link href=\"/dashboard\" prefetch={true}>Dashboard</Link> // default true in production", "lang": "jsx"}, {"cat": "Next.js", "q": "Edge Runtime.", "a": "A lightweight JS runtime (not full Node.js) that runs your route/middleware on CDN edge locations close to the user for lower latency -- trades off some Node APIs for speed and global distribution.", "code": "export const runtime = 'edge'; // opt a route handler into the Edge Runtime", "lang": "javascript"}, {"cat": "Next.js", "q": "Metadata API.", "a": "A typed, file- or export-based way (metadata object or generateMetadata function) to define per-route <head> content -- title, description, Open Graph, icons -- replacing manual <Head> management from the Pages Router.", "code": "export async function generateMetadata({ params }) {\n  const product = await getProduct(params.id);\n  return { title: product.name };\n}", "lang": "javascript"}, {"cat": "Next.js", "q": "Streaming UI.", "a": "With Server Components, Next.js can send HTML in chunks as each part becomes ready (via Suspense boundaries) instead of waiting for the whole page -- so a fast header can render immediately while a slow data widget streams in later.", "code": "<Suspense fallback={<Skeleton />}>\n  <SlowRecommendations /> {/* streams in once its data resolves */}\n</Suspense>", "lang": "jsx"}, {"cat": "TypeScript", "q": "Interface vs Type.", "a": "Both describe object shapes. Interfaces can be re-opened and merged (declaration merging) and are generally preferred for public object/class APIs; type aliases can represent unions, tuples, and mapped types that interfaces cannot.", "code": "interface User { name: string }\ninterface User { age: number } // merges -- User now has both fields\n\ntype Status = 'idle' | 'loading' | 'error'; // interface can't express a union", "lang": "typescript"}, {"cat": "TypeScript", "q": "Generics.", "a": "Generics let a function, type, or class work over a range of types while preserving the specific type used at each call site, instead of using 'any' and losing type safety.", "code": "function firstOf<T>(arr: T[]): T | undefined {\n  return arr[0];\n}\nfirstOf<number>([1, 2, 3]); // number | undefined, inferred without the explicit <number>", "lang": "typescript"}, {"cat": "TypeScript", "q": "Utility Types.", "a": "Built-in generic helpers that transform existing types: Partial<T> makes all props optional, Pick<T,K>/Omit<T,K> select or exclude keys, Readonly<T> locks properties, Record<K,V> builds an object type from key/value types.", "code": "interface User { id: string; name: string; email: string }\ntype UserPreview = Pick<User, 'id' | 'name'>;\ntype UserUpdate = Partial<Omit<User, 'id'>>;", "lang": "typescript"}, {"cat": "TypeScript", "q": "keyof.", "a": "The keyof operator produces a union type of an object type's keys, useful for writing functions that safely index into an object by a valid key.", "code": "interface User { id: string; name: string }\ntype UserKey = keyof User; // 'id' | 'name'\nfunction getProp<T, K extends keyof T>(obj: T, key: K): T[K] {\n  return obj[key];\n}", "lang": "typescript"}, {"cat": "TypeScript", "q": "Mapped Types.", "a": "Mapped types generate a new type by transforming each property of an existing type via a { [K in keyof T]: ... } syntax -- the mechanism behind Partial, Readonly, and custom transforms.", "code": "type Nullable<T> = { [K in keyof T]: T[K] | null };\ninterface Form { name: string; age: number }\ntype NullableForm = Nullable<Form>; // { name: string|null; age: number|null }", "lang": "typescript"}, {"cat": "TypeScript", "q": "Union vs Intersection.", "a": "A union (A | B) means a value can be either type (widens possibilities). An intersection (A & B) combines all members of both into one type that must satisfy both simultaneously (narrows/combines).", "code": "type Cat = { meow(): void };\ntype Dog = { bark(): void };\ntype Pet = Cat | Dog;      // has meow OR bark\ntype CatDog = Cat & Dog;   // must have both meow AND bark", "lang": "typescript"}, {"cat": "TypeScript", "q": "Optional chaining.", "a": "The ?. operator short-circuits to undefined instead of throwing when accessing a property on null/undefined, avoiding verbose manual null checks through nested paths.", "code": "const city = user?.address?.city ?? 'Unknown'; // safely reads nested optional properties", "lang": "typescript"}, {"cat": "TypeScript", "q": "Type narrowing.", "a": "TypeScript refines a broader type to a more specific one within a code branch based on runtime checks like typeof, instanceof, in, or custom type guards, so the narrower type's members become safely accessible.", "code": "function printLength(val: string | string[]) {\n  if (typeof val === 'string') {\n    console.log(val.length); // narrowed to string here\n  } else {\n    console.log(val.length); // narrowed to string[] here\n  }\n}", "lang": "typescript"}, {"cat": "TypeScript", "q": "Never vs Unknown.", "a": "'unknown' is a type-safe version of 'any' -- accepts anything but requires narrowing before use. 'never' represents a value that can never occur, used for exhaustiveness checks and functions that always throw or infinite-loop.", "code": "function assertUnreachable(x: never): never {\n  throw new Error('Unexpected value: ' + x); // catches missed switch cases at compile time\n}\nfunction parse(input: unknown) {\n  if (typeof input === 'string') return input.trim(); // must narrow before use\n}", "lang": "typescript"}, {"cat": "TypeScript", "q": "Type-safe APIs.", "a": "Define request/response shapes as types (or generate them from an OpenAPI/GraphQL schema), wrap fetch calls in a typed client, and use generics so callers get compile-time safety and autocomplete instead of 'any' responses.", "code": "async function apiGet<T>(url: string): Promise<T> {\n  const res = await fetch(url);\n  return res.json() as Promise<T>;\n}\nconst user = await apiGet<User>('/api/user/1'); // fully typed 'user'", "lang": "typescript"}, {"cat": "Frontend Architecture", "q": "Describe your frontend architecture.", "a": "Talk in layers: feature-based folder structure, a shared UI/design-system package, a data layer (React Query) separated from presentation, typed API contracts, and clear boundaries so features don't reach into each other's internals.", "code": "src/\n  features/checkout/{components,hooks,api}\n  features/profile/{components,hooks,api}\n  shared/ui/          # design system\n  shared/lib/          # generic utilities", "lang": ""}, {"cat": "Frontend Architecture", "q": "What is Atomic Design?", "a": "A methodology structuring UI into atoms (buttons, inputs), molecules (a labeled input = atoms combined), organisms (a full form = molecules combined), templates (page layout skeletons), and pages (templates with real content).", "code": "atoms/Button.tsx -> molecules/SearchBar.tsx -> organisms/Header.tsx -> templates/PageLayout.tsx -> pages/HomePage.tsx", "lang": ""}, {"cat": "Frontend Architecture", "q": "Component-driven development.", "a": "Build UI bottom-up: develop and test components in isolation (e.g. in Storybook) before wiring them into pages, so components are proven reusable and visually verified before integration risk is added.", "code": "// Button.stories.tsx\nexport const Primary = () => <Button variant=\"primary\">Click me</Button>;\nexport const Disabled = () => <Button disabled>Click me</Button>;", "lang": "jsx"}, {"cat": "Frontend Architecture", "q": "Module Federation.", "a": "A Webpack (5+) capability letting separately built and deployed apps share code and expose/consume components at runtime, without a shared build step -- a common technical implementation for micro-frontends.", "code": "// host app webpack config\nnew ModuleFederationPlugin({\n  remotes: { checkout: 'checkout@https://cdn/checkout/remoteEntry.js' },\n});", "lang": "javascript"}, {"cat": "Frontend Architecture", "q": "Micro Frontends.", "a": "Splitting a large frontend into independently built, tested, and deployed pieces owned by separate teams, composed together at runtime or build time -- trades some duplicated tooling/overhead for team autonomy and independent release cycles.", "code": "", "lang": ""}, {"cat": "Frontend Architecture", "q": "Monorepo vs Polyrepo.", "a": "A monorepo keeps multiple packages/apps in one repository (easy cross-package refactors, shared tooling, atomic commits across packages) vs polyrepo's separate repos per package (stronger isolation, independent versioning, more release overhead). Tools like Turborepo/Nx make monorepos practical at scale.", "code": "apps/web  apps/admin\npackages/ui  packages/config  packages/utils", "lang": ""}, {"cat": "Frontend Architecture", "q": "Feature-based architecture.", "a": "Organize code by business feature (checkout/, profile/) rather than by technical type (all components/ together, all hooks/ together) -- so everything needed to understand or change a feature lives in one place.", "code": "features/checkout/\n  CheckoutForm.tsx\n  useCheckout.ts\n  checkoutApi.ts\n  checkout.test.tsx", "lang": ""}, {"cat": "Frontend Architecture", "q": "Design Tokens.", "a": "Named, platform-agnostic values (color-primary, spacing-4, font-size-lg) that centralize design decisions so they can be shared across web/iOS/Android and changed in one place instead of hardcoded throughout components.", "code": "// tokens.json -> generates CSS variables\n:root {\n  --color-primary: #ffffff;\n  --spacing-4: 16px;\n}", "lang": "css"}, {"cat": "Frontend Architecture", "q": "Storybook.", "a": "A tool for developing and documenting UI components in isolation with different states/props (stories), enabling visual review, accessibility checks, and visual regression testing without needing the full app running.", "code": "export default { component: Button };\nexport const AllVariants = () => (\n  <>\n    <Button variant=\"primary\">Primary</Button>\n    <Button variant=\"ghost\">Ghost</Button>\n  </>\n);", "lang": "jsx"}, {"cat": "Frontend Architecture", "q": "Folder structure.", "a": "Prefer feature-based grouping over type-based for anything beyond a small app, keep a 'shared' layer for truly cross-cutting code, and avoid deep nesting that makes imports hard to trace.", "code": "src/\n  app/          # routing, providers\n  features/     # feature-based modules\n  shared/       # ui, lib, hooks used everywhere", "lang": ""}, {"cat": "Frontend Architecture", "q": "How would you design a scalable UI architecture?", "a": "Separate presentation from data-fetching, enforce a shared design system as the only source of UI primitives, define clear feature boundaries with public APIs (index.ts exports), type all contracts, and enforce lint rules against cross-feature imports.", "code": "// eslint boundary rule example concept\n// features/checkout can't import from features/profile/internal/*", "lang": ""}, {"cat": "Design System", "q": "Have you built a Design System?", "a": "Answer with scope: how many components, how many consuming teams, and one concrete adoption metric or challenge you solved.", "code": "Example answer: \"I led a design system with 35 components used by 6 product teams, built on design tokens shared between Figma and code via a token pipeline, which cut new-feature UI build time by roughly a third.\"", "lang": ""}, {"cat": "Design System", "q": "What makes a good UI component?", "a": "Single responsibility, a small predictable prop API, sensible defaults, accessible by default (keyboard/ARIA), visually consistent via tokens rather than hardcoded values, and documented with clear usage examples.", "code": "<Button variant=\"primary\" size=\"md\" isLoading={false} disabled={false}>\n  Save\n</Button> // predictable API, sensible defaults, no hidden required props", "lang": ""}, {"cat": "Design System", "q": "Button variants.", "a": "Typically primary (main CTA), secondary/ghost (lower emphasis), destructive (dangerous actions), and disabled/loading states -- each mapped to token-based colors so a single theme change updates every button.", "code": ".btn-primary { background: var(--color-fg); color: var(--color-bg); }\n.btn-ghost { background: transparent; border: 1px solid var(--color-fg); }", "lang": "css"}, {"cat": "Design System", "q": "Typography.", "a": "Define a type scale (e.g. modular scale with a ratio like 1.25), limit to 2 font families (display + body), and set line-height/letter-spacing per size step -- expose as tokens, not ad-hoc font-size values in components.", "code": "--font-size-sm: 14px; --font-size-md: 16px; --font-size-lg: 20px; --font-size-xl: 28px;", "lang": "css"}, {"cat": "Design System", "q": "Colors.", "a": "Define semantic tokens (color-bg, color-fg, color-danger) that map to raw palette values, so components reference semantics, not raw hex -- enabling theming (light/dark) by only swapping the token mapping.", "code": ":root { --color-bg: #000; --color-fg: #fff; }\n[data-theme='light'] { --color-bg: #fff; --color-fg: #000; }", "lang": "css"}, {"cat": "Design System", "q": "Spacing.", "a": "Use a consistent spacing scale (e.g. 4px base: 4/8/12/16/24/32) as tokens rather than arbitrary pixel values, so layouts stay visually rhythmic and easy to reason about.", "code": "--space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px;", "lang": "css"}, {"cat": "Design System", "q": "Icons.", "a": "Use a single consistent icon set (same stroke width/grid) delivered as an SVG sprite or tree-shakeable component library, sized via tokens, with aria-hidden on decorative icons and accessible labels on interactive ones.", "code": "<Icon name=\"trash\" size={16} aria-hidden=\"true\" /> // decorative; pair with visible/aria-label text for interactive use", "lang": "jsx"}, {"cat": "Design System", "q": "Tokens.", "a": "The atomic values (color, spacing, radius, shadow, type) that back every component -- ideally defined once (e.g. in Figma or a JSON source of truth) and generated into CSS variables/JS constants for code, keeping design and code in sync.", "code": "// tokens generated to multiple platforms from one JSON source\n{ \"color.bg\": \"#000000\", \"space.4\": \"16px\" }", "lang": ""}, {"cat": "Design System", "q": "Component documentation.", "a": "Every component needs a live example (Storybook), a prop/API table, usage do's and don'ts, and accessibility notes -- documentation that's runnable, not just a static markdown description that can drift from the code.", "code": "", "lang": ""}, {"cat": "Design System", "q": "Versioning strategy.", "a": "Publish the design system as a semver-versioned package (patch = bugfix, minor = new component/non-breaking prop, major = breaking API change) with a changelog, so consuming apps can upgrade deliberately.", "code": "npm install @northladder/ui@^2.3.0 // consuming app pins a compatible range, upgrades deliberately", "lang": ""}, {"cat": "Design System", "q": "How would you encourage adoption across teams?", "a": "Make the system the path of least resistance: solve real pain points first, provide Figma-to-code parity, run office hours/onboarding sessions, and track adoption metrics to show ROI to leadership.", "code": "Example: I tracked % of UI built from design-system components per team dashboard, which turned adoption into a visible, celebrated metric rather than an unenforced guideline.", "lang": ""}, {"cat": "UI & UX", "q": "Mobile-first vs Desktop-first.", "a": "Mobile-first starts CSS for the smallest viewport and adds complexity via min-width media queries as screens grow -- generally leads to leaner, more focused mobile experiences and forces prioritization. Desktop-first does the reverse and often ships bloated mobile UX as an afterthought.", "code": "/* mobile-first */\n.card { padding: 12px; }\n@media (min-width: 768px) { .card { padding: 24px; } }", "lang": "css"}, {"cat": "UI & UX", "q": "Responsive Design.", "a": "Layouts adapt fluidly to viewport size using relative units, flexible grids, media/container queries, and responsive images -- rather than fixed pixel layouts that break on other screen sizes.", "code": "@container (min-width: 400px) {\n  .card { grid-template-columns: 1fr 1fr; }\n}", "lang": "css"}, {"cat": "UI & UX", "q": "CSS Grid vs Flexbox.", "a": "Flexbox is one-dimensional (row OR column) and best for distributing items along a single axis (navbars, button groups). Grid is two-dimensional (rows AND columns) and best for overall page/section layout where both axes matter.", "code": ".navbar { display: flex; justify-content: space-between; } /* 1D */\n.page { display: grid; grid-template-columns: 240px 1fr; }   /* 2D */", "lang": "css"}, {"cat": "UI & UX", "q": "Tailwind vs Styled Components.", "a": "Tailwind uses utility classes directly in markup (fast iteration, no naming, small production CSS via purging, but can clutter JSX). Styled Components writes actual CSS-in-JS scoped to a component (co-located styles, dynamic props-based styling, but runtime cost and larger bundle).", "code": "// Tailwind\n<button className=\"px-4 py-2 bg-black text-white rounded\">Save</button>\n// Styled Components\nconst Btn = styled.button`padding: 8px 16px; background: black; color: white;`;", "lang": "jsx"}, {"cat": "UI & UX", "q": "CSS Modules.", "a": "CSS files scoped automatically per-component at build time (class names get hashed uniquely), giving true style isolation without a naming convention like BEM and without CSS-in-JS runtime cost.", "code": "/* Button.module.css */\n.button { padding: 8px 16px; }\n\n// Button.tsx\nimport styles from './Button.module.css';\n<button className={styles.button} />", "lang": "css"}, {"cat": "UI & UX", "q": "Accessibility.", "a": "Building UI usable by people with disabilities: semantic HTML, sufficient color contrast, full keyboard operability, proper ARIA only where semantics fall short, and screen-reader-friendly labeling -- both a legal requirement (ADA/WCAG) and good UX for everyone.", "code": "<button aria-pressed={isActive} onClick={toggle}>\n  {isActive ? 'Following' : 'Follow'}\n</button> // native <button>, no ARIA hacks needed for basic toggle semantics", "lang": "jsx"}, {"cat": "UI & UX", "q": "WCAG 2.1 AA.", "a": "The mid-tier Web Content Accessibility Guidelines compliance level most organizations target legally: 4.5:1 text contrast minimum (3:1 for large text), full keyboard operability, visible focus indicators, resizable text to 200%, and meaningful alt text/labels.", "code": "", "lang": ""}, {"cat": "UI & UX", "q": "Keyboard Navigation.", "a": "Every interactive element must be reachable and operable via Tab/Shift+Tab/Enter/Space/Arrow keys alone, in a logical order matching visual layout, with no keyboard traps.", "code": "<div role=\"button\" tabIndex={0}\n  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick()}\n  onClick={onClick}>\n  Custom Button\n</div> // needed only when you can't use a native <button>", "lang": "jsx"}, {"cat": "UI & UX", "q": "ARIA.", "a": "Accessible Rich Internet Applications attributes fill semantic gaps HTML doesn't cover (custom widgets like tabs, comboboxes) -- but the first rule of ARIA is: don't use ARIA if a native HTML element already provides the semantics you need.", "code": "<div role=\"tablist\">\n  <button role=\"tab\" aria-selected=\"true\" id=\"tab1\">Tab 1</button>\n</div>", "lang": "jsx"}, {"cat": "UI & UX", "q": "Color Contrast.", "a": "Text must meet a minimum contrast ratio against its background (4.5:1 normal text, 3:1 large text/UI components at WCAG AA) so low-vision users can read it -- checked with tools like the WebAIM contrast checker.", "code": "/* pure black on white or white on black = 21:1, far exceeds AA */\ncolor: #ffffff; background: #000000;", "lang": "css"}, {"cat": "UI & UX", "q": "Focus Management.", "a": "Ensure focus moves logically for the user, especially in dynamic UI: move focus into a modal on open and return it to the trigger on close, and never remove visible focus outlines without a visible replacement.", "code": "useEffect(() => {\n  if (isOpen) dialogRef.current?.focus();\n  return () => triggerRef.current?.focus(); // restore focus on close\n}, [isOpen]);", "lang": "jsx"}, {"cat": "Performance", "q": "Largest React performance issue you solved.", "a": "Frame it as: symptom -> profiling method -> root cause -> fix -> measured result.", "code": "Example: a dashboard re-rendered its entire 500-row table on every keystroke in an unrelated filter input. React DevTools Profiler showed unmemoized rows re-rendering; wrapping Row in React.memo and moving the filter input's state out of the shared parent cut render time from 400ms to 30ms.", "lang": ""}, {"cat": "Performance", "q": "React.memo.", "a": "A higher-order component that skips re-rendering a component if its props are shallow-equal to the previous render -- useful for expensive leaf components in lists, but adds overhead if the component is cheap or props change every render anyway.", "code": "const Row = React.memo(function Row({ item }) {\n  return <tr><td>{item.name}</td></tr>;\n}); // skips re-render if 'item' reference is unchanged", "lang": "jsx"}, {"cat": "Performance", "q": "Lazy Loading.", "a": "Defer loading of code or assets until actually needed (route-level code splitting, below-the-fold images) to shrink initial bundle/payload size and speed up first render.", "code": "const Settings = React.lazy(() => import('./Settings'));", "lang": "jsx"}, {"cat": "Performance", "q": "Code Splitting.", "a": "Breaking a single large JS bundle into smaller chunks loaded on demand (per route or per feature) via dynamic import(), so users only download the code the current page actually needs.", "code": "// route-based split, handled automatically by Next.js per page\nconst Chart = dynamic(() => import('./Chart'));", "lang": "javascript"}, {"cat": "Performance", "q": "Bundle Optimization.", "a": "Analyze bundle composition (e.g. with webpack-bundle-analyzer), remove unused/duplicate dependencies, prefer smaller alternatives, tree-shake unused exports, and code-split heavy rarely-used features.", "code": "npx @next/bundle-analyzer  # visualize what's actually shipped to the client", "lang": "bash"}, {"cat": "Performance", "q": "Lighthouse.", "a": "A Chrome dev tool auditing pages for performance, accessibility, best practices, and SEO, producing a 0-100 score per category plus Core Web Vitals metrics and specific actionable suggestions.", "code": "npx lighthouse https://example.com --view", "lang": "bash"}, {"cat": "Performance", "q": "Tree Shaking.", "a": "A build-time process (via ES module static analysis) that removes exported code that's never imported anywhere, shrinking the final bundle -- requires using ES modules (import/export) rather than CommonJS for the analysis to work.", "code": "// only 'debounce' is imported, so tree-shaking drops the rest of the library\nimport { debounce } from 'lodash-es';", "lang": "javascript"}, {"cat": "Performance", "q": "Image Optimization.", "a": "Serve correctly sized, modern-format (WebP/AVIF) images, lazy-load offscreen images, and set explicit dimensions to avoid layout shift -- next/image handles most of this automatically.", "code": "<Image src=\"/photo.jpg\" width={600} height={400} alt=\"\" sizes=\"(max-width: 768px) 100vw, 600px\" />", "lang": "jsx"}, {"cat": "Performance", "q": "Virtualization.", "a": "Render only the DOM nodes currently visible in a long list/table (plus a small buffer), recycling nodes as the user scrolls -- keeps DOM node count constant regardless of list size, critical for lists of thousands of rows.", "code": "import { FixedSizeList } from 'react-window';\n<FixedSizeList height={600} itemCount={10000} itemSize={35} width=\"100%\">\n  {({ index, style }) => <div style={style}>Row {index}</div>}\n</FixedSizeList>", "lang": "jsx"}, {"cat": "Performance", "q": "Debouncing.", "a": "Delay invoking a function until a burst of calls has paused for a set duration -- used for search inputs to avoid firing an API call on every keystroke.", "code": "const debouncedSearch = useMemo(() => debounce(fetchResults, 300), []);", "lang": "javascript"}, {"cat": "Performance", "q": "Throttling.", "a": "Limit a function to run at most once per fixed time window, regardless of how many times it's triggered -- used for scroll/resize handlers where you need periodic updates, not a final-value-only pattern.", "code": "window.addEventListener('scroll', throttle(updateScrollPosition, 100));", "lang": "javascript"}, {"cat": "Performance", "q": "Memoization.", "a": "Caching the result of an expensive computation keyed by its inputs, so repeated calls with the same inputs return the cached result instead of recomputing -- in React, useMemo/React.memo/useCallback are the built-in tools.", "code": "const total = useMemo(() => items.reduce((s, i) => s + i.price, 0), [items]);", "lang": "jsx"}, {"cat": "Performance", "q": "Performance profiling.", "a": "Use the React DevTools Profiler to find components re-rendering unnecessarily or rendering slowly, and Chrome DevTools Performance tab to find long JS tasks, layout thrashing, or excessive paint work -- always measure before optimizing.", "code": "// wrap a suspect subtree to isolate its render cost\n<Profiler id=\"Dashboard\" onRender={(id, phase, duration) => console.log(duration)}>\n  <Dashboard />\n</Profiler>", "lang": "jsx"}, {"cat": "Testing", "q": "Jest.", "a": "A JS test runner/framework with built-in assertions, mocking, snapshot testing, and coverage reporting -- the most common runner for unit and integration tests in React apps (Vitest is a common faster alternative today).", "code": "test('adds two numbers', () => {\n  expect(sum(2, 3)).toBe(5);\n});", "lang": "javascript"}, {"cat": "Testing", "q": "React Testing Library.", "a": "A testing utility that encourages testing components the way a user interacts with them (by visible text/role, not internal implementation details), leading to tests that survive refactors better than shallow-rendering approaches.", "code": "render(<LoginForm />);\nawait userEvent.type(screen.getByLabelText('Email'), 'a@b.com');\nawait userEvent.click(screen.getByRole('button', { name: /log in/i }));\nexpect(await screen.findByText('Welcome')).toBeInTheDocument();", "lang": "javascript"}, {"cat": "Testing", "q": "Cypress.", "a": "An end-to-end testing tool that runs tests inside the actual browser with time-travel debugging, real network control, and automatic waiting -- strong developer experience for E2E and component testing.", "code": "cy.visit('/login');\ncy.get('[data-cy=email]').type('a@b.com');\ncy.get('[data-cy=submit]').click();\ncy.contains('Welcome').should('be.visible');", "lang": "javascript"}, {"cat": "Testing", "q": "Playwright.", "a": "A cross-browser (Chromium/Firefox/WebKit) E2E testing framework with strong parallelization, auto-waiting, and network interception -- increasingly preferred over Cypress for true multi-browser coverage and CI speed.", "code": "await page.goto('/login');\nawait page.fill('#email', 'a@b.com');\nawait page.click('button[type=submit]');\nawait expect(page.getByText('Welcome')).toBeVisible();", "lang": "javascript"}, {"cat": "Testing", "q": "Snapshot Testing.", "a": "Captures a component's rendered output and compares it against a saved reference on future runs, flagging unexpected changes -- useful for catching accidental UI regressions, but low-value if snapshots are huge or blindly updated without review.", "code": "test('renders correctly', () => {\n  const { asFragment } = render(<Card title=\"Hi\" />);\n  expect(asFragment()).toMatchSnapshot();\n});", "lang": "javascript"}, {"cat": "Testing", "q": "Integration Testing.", "a": "Tests multiple units working together (a form component plus its validation hook plus a mocked API call) to verify they integrate correctly -- sits between fast isolated unit tests and slow full E2E tests.", "code": "test('submits form and shows success', async () => {\n  server.use(rest.post('/api/signup', (req, res, ctx) => res(ctx.json({ ok: true }))));\n  render(<SignupForm />);\n  // fill form and submit, then assert success message appears\n});", "lang": "javascript"}, {"cat": "Testing", "q": "E2E Testing.", "a": "Tests the full application stack (real or realistic backend, real browser) through actual user flows end-to-end -- highest confidence, slowest and most brittle, so reserved for critical paths like checkout or auth, not exhaustive coverage.", "code": "test('user can complete checkout', async ({ page }) => {\n  await page.goto('/cart');\n  await page.click('text=Checkout');\n  await expect(page).toHaveURL('/order-confirmation');\n});", "lang": "javascript"}, {"cat": "Testing", "q": "Mock APIs example.", "a": "Intercept network requests in tests so they return controlled fixture data instead of hitting a real backend -- keeps tests fast, deterministic, and independent of external services. MSW (Mock Service Worker) is the common modern tool.", "code": "const server = setupServer(\n  rest.get('/api/user', (req, res, ctx) => res(ctx.json({ name: 'Sam' })))\n);\nbeforeAll(() => server.listen());", "lang": "javascript"}, {"cat": "Testing", "q": "Visual Regression Testing.", "a": "Captures screenshots of components/pages and diffs them pixel-by-pixel against a baseline on each run, flagging unintended visual changes -- tools like Chromatic (built on Storybook) or Percy automate this in CI.", "code": "// Chromatic runs this automatically against every Storybook story on each PR\n// flags any pixel diff for human review before merge", "lang": ""}, {"cat": "Testing", "q": "Button click test case.", "a": "Test the observable behavior a user cares about (does clicking call the handler / update visible state), not internal implementation like state variable names.", "code": "test('calls onClick when clicked', async () => {\n  const onClick = jest.fn();\n  render(<Button onClick={onClick}>Save</Button>);\n  await userEvent.click(screen.getByRole('button', { name: 'Save' }));\n  expect(onClick).toHaveBeenCalledTimes(1);\n});", "lang": "javascript"}, {"cat": "CI/CD", "q": "Describe your frontend pipeline.", "a": "Walk through stages: lint/typecheck -> unit tests -> build -> E2E on a preview deploy -> deploy to staging -> manual or automatic promotion to production, with each stage gating the next.", "code": "PR opened -> lint + typecheck + unit tests (parallel) -> build + preview deploy -> E2E against preview -> merge -> auto-deploy staging -> manual approval -> production", "lang": ""}, {"cat": "CI/CD", "q": "GitHub Actions.", "a": "A CI/CD platform built into GitHub that runs workflows (YAML-defined jobs) on events like push/PR -- commonly used for lint/test/build/deploy pipelines with a large marketplace of reusable actions.", "code": "on: [pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm ci\n      - run: npm test", "lang": "yaml"}, {"cat": "CI/CD", "q": "Jenkins.", "a": "A self-hosted, highly extensible CI/CD server configured via Jenkinsfiles (pipeline-as-code), commonly used in enterprises needing on-prem control or complex custom pipeline logic beyond what hosted CI offers.", "code": "pipeline {\n  agent any\n  stages {\n    stage('Test') { steps { sh 'npm test' } }\n    stage('Deploy') { steps { sh 'npm run deploy' } }\n  }\n}", "lang": "groovy"}, {"cat": "CI/CD", "q": "Build optimization.", "a": "Cache dependencies and build artifacts between CI runs, parallelize independent jobs (lint/test/typecheck run concurrently, not sequentially), and use incremental builds (Turborepo/Nx) in a monorepo to only rebuild what changed.", "code": "- uses: actions/cache@v4\n  with:\n    path: node_modules\n    key: npm-${{ hashFiles('package-lock.json') }}", "lang": "yaml"}, {"cat": "CI/CD", "q": "Deployment strategy.", "a": "Options include rolling (gradually replace old instances), blue-green (switch traffic instantly between two full environments), and canary (route a small % of traffic to the new version first) -- choice depends on risk tolerance and rollback speed needed.", "code": "", "lang": ""}, {"cat": "CI/CD", "q": "Rollback strategy.", "a": "Keep the previous build artifact deployable at all times (immutable deploys), automate rollback triggers on error-rate/health-check failure, and prefer feature flags over full redeploys for fast, low-risk reversal.", "code": "// most platforms (Vercel/Netlify) let you instantly re-promote a prior immutable deployment\nvercel rollback <previous-deployment-url>", "lang": "bash"}, {"cat": "CI/CD", "q": "Feature Flags.", "a": "Toggle functionality on/off at runtime without a redeploy -- enables trunk-based development (merge incomplete work behind a flag), gradual rollouts, and instant kill-switches if a feature misbehaves in production.", "code": "if (flags.isEnabled('new-checkout')) {\n  return <NewCheckout />;\n}\nreturn <LegacyCheckout />;", "lang": "jsx"}, {"cat": "CI/CD", "q": "Remote Config.", "a": "Externalized configuration values (thresholds, copy, experiment variants) that can be changed remotely without a code deploy -- often layered with feature flags for A/B testing and per-segment behavior.", "code": "", "lang": ""}, {"cat": "CI/CD", "q": "Blue-Green Deployment.", "a": "Run two identical production environments ('blue' live, 'green' idle); deploy the new version to green, verify it, then switch the router/load balancer to send all traffic to green -- near-zero downtime and instant rollback by switching back to blue.", "code": "", "lang": ""}, {"cat": "System Design", "q": "Design an e-commerce frontend.", "a": "Cover: catalog browsing (SSR/ISR for SEO), product detail with client-side cart interactions, cart state (persisted client-side + synced to server for logged-in users), checkout as an isolated flow with strict validation, and payment via a hosted/tokenized third-party widget for PCI compliance.", "code": "Pages: /  /category/[slug]  /product/[id]  /cart  /checkout\nState: server cart via API + optimistic local updates, React Query for catalog data", "lang": ""}, {"cat": "System Design", "q": "Design a reusable component library.", "a": "Token-driven styling, a small consistent prop API across components, per-component accessibility and tests, Storybook documentation, and semver-versioned publishing so teams can adopt updates deliberately.", "code": "", "lang": ""}, {"cat": "System Design", "q": "Design a dashboard supporting 100k users.", "a": "Virtualize large data tables, paginate/cursor-fetch API data rather than loading everything, cache aggressively with React Query (staleTime/background refetch), lazy-load rarely-viewed widgets/tabs, and use websockets or polling only for genuinely live data, not everything.", "code": "const { data } = useQuery({\n  queryKey: ['metrics', filters],\n  queryFn: () => fetchMetrics(filters),\n  staleTime: 30_000, // avoid refetch storms across 100k concurrent users\n});", "lang": "jsx"}, {"cat": "System Design", "q": "Design a scalable Design System.", "a": "Single source-of-truth tokens generated to multiple platforms, framework-agnostic primitives where possible, strict versioning, automated visual regression tests in CI, and a governance process (an RFC-style proposal flow) for adding new components.", "code": "", "lang": ""}, {"cat": "System Design", "q": "How would you architect a multi-brand application?", "a": "Keep components brand-agnostic and drive all visual differences through swappable design-token themes (per-brand CSS variable sets), with brand-specific copy/assets loaded via config rather than forked components.", "code": "[data-brand='acme'] { --color-primary: #ffffff; }\n[data-brand='globex'] { --color-primary: #f0f0f0; }", "lang": "css"}, {"cat": "System Design", "q": "Micro Frontend architecture.", "a": "Decompose the app by domain (checkout, catalog, account), each owned and deployed independently by a team, composed at the shell/router level (via Module Federation, iframes, or edge-side includes) -- with a shared design system to keep UX consistent despite independent codebases.", "code": "", "lang": ""}, {"cat": "System Design", "q": "Build a notification system.", "a": "Frontend: a global notification store (Context/Zustand) with a queue, a WebSocket or SSE connection for real-time push falling back to polling, toast/banner components for transient alerts, and a persistent notification center for history with read/unread state.", "code": "const useNotifications = create((set) => ({\n  items: [],\n  push: (n) => set((s) => ({ items: [n, ...s.items] })),\n}));", "lang": "javascript"}, {"cat": "System Design", "q": "Offline-first web app.", "a": "Use a Service Worker to cache app shell and assets, an IndexedDB-backed local data store as the source of truth for UI, sync mutations to the server in the background (with conflict resolution) once connectivity returns, and show clear online/offline UI state.", "code": "self.addEventListener('fetch', (event) => {\n  event.respondWith(\n    caches.match(event.request).then((cached) => cached || fetch(event.request))\n  );\n});", "lang": "javascript"}, {"cat": "System Design", "q": "Progressive Web App.", "a": "A web app that behaves like a native app via a manifest.json (installable, icons, splash screen) and a service worker (offline support, push notifications, background sync) -- gives app-like reach without an app-store install.", "code": "// manifest.json\n{ \"name\": \"NorthLadder\", \"display\": \"standalone\", \"start_url\": \"/\", \"icons\": [...] }", "lang": "json"}, {"cat": "Behavioral", "q": "Tell me about a difficult project.", "a": "Use STAR: Situation, Task, Action, Result. Pick a project with real ambiguity or constraint (unclear requirements, tight deadline, legacy code) and be specific about your individual actions.", "code": "Example: \"Our design system had to support 3 brands with 6 weeks' notice before a launch (Situation/Task). I proposed a token-based theming layer instead of forking components, built a proof of concept in 2 days to get buy-in, then led implementation across 12 components (Action). We shipped on time with zero component duplication (Result).\"", "lang": ""}, {"cat": "Behavioral", "q": "Tell me about a conflict with another engineer.", "a": "Focus on how you resolved it professionally and what you learned -- avoid blaming the other person, show you sought to understand their perspective.", "code": "Example: \"A peer and I disagreed on state management for a new module. Instead of arguing further in Slack, I suggested we each spend half a day prototyping our approach against the real requirements, then review together. His approach turned out simpler for our case -- I adopted it, and we agreed to always time-box a spike before big architecture debates going forward.\"", "lang": ""}, {"cat": "Behavioral", "q": "Tell me about a failed release.", "a": "Own the failure honestly, focus on the root cause analysis and the process change that came out of it, not on assigning blame.", "code": "Example: \"We shipped a pricing update that broke checkout for users with saved payment methods -- our staging tests didn't cover that user segment. I ran the postmortem, we added a staging seed script covering all payment-method states, and added a canary release step before full rollout. We haven't had a similar incident since.\"", "lang": ""}, {"cat": "Behavioral", "q": "Tell me about a production bug.", "a": "Show the debugging process (how you narrowed it down), the fix, and the follow-up to prevent recurrence -- demonstrates both technical skill and systems thinking.", "code": "Example: \"Users reported random logouts. I reproduced it, checked network logs, and traced it to a race condition where a token refresh and an API call fired simultaneously, invalidating a valid session. I added a request queue during refresh, and added a regression test simulating concurrent requests.\"", "lang": ""}, {"cat": "Behavioral", "q": "Describe a time you led a technical initiative.", "a": "Show initiative-taking (you identified the problem, not just executed a assigned task), how you got buy-in, and the measurable outcome.", "code": "Example: \"I noticed our bundle size had crept to 2.4MB with no one tracking it. I proposed and led a bundle-budget initiative: added CI checks that fail on budget regressions, and led a cleanup sprint that got us to 1.1MB, improving median load time by 35%.\"", "lang": ""}, {"cat": "Behavioral", "q": "Describe a difficult stakeholder.", "a": "Show empathy for their constraints while holding a clear technical position, and demonstrate you found a path that addressed their underlying need, not just their literal request.", "code": "Example: \"A PM wanted a feature shipped in 3 days that needed 2 weeks technically. Rather than a flat no, I broke it into a scoped MVP we could ship in 3 days plus a follow-up for the rest, which met her actual deadline pressure (a demo) without cutting corners on the full feature.\"", "lang": ""}, {"cat": "Behavioral", "q": "Describe a situation where you changed a technical decision.", "a": "Show intellectual honesty: what new information changed your mind, and that you communicated the change transparently rather than quietly reversing course.", "code": "Example: \"I'd championed GraphQL for a new service, but after a 2-week spike showed our team's REST tooling and monitoring were far more mature, I recommended we stick with REST and wrote up the reasoning so the decision was documented, not just abandoned quietly.\"", "lang": ""}, {"cat": "Behavioral", "q": "Tell us about mentoring someone.", "a": "Give a specific person's growth arc (without naming them if sensitive), your concrete mentoring actions, and the measurable outcome (promotion, ownership gained).", "code": "Example: \"I mentored a junior engineer struggling with code review feedback taking things personally. I started doing paired review sessions live instead of async comments, which built trust; within two quarters he was doing thoughtful reviews for others and was promoted to mid-level.\"", "lang": ""}, {"cat": "Behavioral", "q": "Biggest mistake you've made.", "a": "Choose a real, moderately consequential mistake, own it fully without excessive self-flagellation, and lead with what you changed afterward -- this shows maturity, not risk.", "code": "Example: \"I deployed a database migration directly to production without a staging dry-run, which locked a table for 10 minutes during peak traffic. I now enforce staging dry-runs for all migrations, and added migration duration estimates to our deploy checklist.\"", "lang": ""}, {"cat": "Behavioral", "q": "What would your team say about you?", "a": "Pick 2-3 specific traits backed by evidence (not just adjectives), ideally something you know from actual feedback (a review, a retro comment) rather than assumed.", "code": "Example: \"Probably that I'm direct but fair in code review, and that I protect the team's focus time -- in my last review, two engineers specifically mentioned I shield the team from scope creep mid-sprint.\"", "lang": ""}]</script>
-
+:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:60px}
+body{margin:0;background:#000;color:#fff;font:16.5px/1.65 Georgia,serif}
+.w{max-width:880px;margin:0 auto;padding:0 22px}
+header{padding:56px 0 36px;border-bottom:1px solid #fff}
+h1{font-size:clamp(30px,6vw,54px);line-height:1.1;margin:0 0 12px;letter-spacing:-.02em}
+header p{margin:0;color:#ccc;max-width:60ch}
+nav{position:sticky;top:0;background:#000;border-bottom:1px solid #444;z-index:5;padding-top:env(safe-area-inset-top,0px)}
+nav .w{display:flex;overflow-x:auto;gap:2px}
+nav button,.t button{font:600 13.5px system-ui,sans-serif;background:#000;color:#aaa;border:0;border-bottom:3px solid transparent;padding:14px 12px;cursor:pointer;white-space:nowrap}
+nav button[aria-pressed=true]{color:#fff;border-bottom-color:#fff}
+nav button:hover{color:#fff}
+:focus-visible{outline:2px solid #fff;outline-offset:2px}
+h2{font-size:28px;margin:44px 0 4px}
+.lead{color:#bbb;margin:0 0 16px}
+.t{margin:0 0 12px}
+.t button{border:1px solid #666;padding:7px 12px;color:#fff;margin-right:8px}
+.t button:hover{background:#fff;color:#000}
+details{border-top:1px solid #444}
+details:last-of-type{border-bottom:1px solid #444}
+summary{cursor:pointer;list-style:none;padding:15px 34px 15px 0;font-weight:700;position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:4px;top:10px;font:300 26px system-ui}
+details[open] summary::after{content:"\2212"}
+.a{padding:0 0 20px;max-width:70ch;color:#e6e6e6}
+.a p{margin:0 0 10px}.a ul,.a ol{margin:0 0 10px;padding-left:20px}.a li{margin-bottom:5px}
+.say{border-left:4px solid #fff;padding-left:14px;color:#fff}
+.tag{font:600 11.5px system-ui;background:#fff;color:#000;padding:1px 7px;margin-right:6px}
+code{font:13.5px ui-monospace,Menlo,monospace;background:#1a1a1a;border:1px solid #444;padding:0 5px;color:#fff}
+pre{font:13px/1.5 ui-monospace,Menlo,monospace;background:#111;border:1px solid #555;padding:13px;overflow-x:auto;margin:0 0 12px;color:#fff}
+.box{border:1px solid #fff;padding:16px 20px;margin:0 0 16px}
+.box h3{margin:0 0 6px;font-size:18px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font:14.5px/1.5 system-ui;margin:0 0 14px}
+th,td{border:1px solid #555;padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#fff;color:#000}
+.hide{display:none}
+footer{border-top:1px solid #444;padding:24px;text-align:center;font:14px system-ui;color:#aaa}
+@media print{body{background:#fff;color:#000}nav,.t{display:none}.a{color:#000}details>*{display:block}}
+</style></head><body>
+<header><div class="w"><h1>React Native interview prep</h1>
+<p>Vijay Gehlot for Tripare. Built from your CV, the job post and your notes. Open a question, answer aloud, close it, repeat.</p></div></header>
+<nav><div class="w" id="f"></div></nav>
+<main class="w" id="m"></main>
+<footer>Say it in your own words. Only claim what you have done.</footer>
 <script>
-const DATA = JSON.parse(document.getElementById('qdata').textContent);
+var S=[
+{id:"pitch",n:"Pitch",lead:"Your story, matched to Tripare.",q:[
+["Tell me about yourself",`<p class="say">I’m Vijay, a React and React Native engineer with 6+ years across aviation, fintech and media. At IndiGo I built a Shell App and Mini Apps setup with Module Federation so teams deploy independently, and I shipped the in-flight entertainment feature “Hello 6E”, validated on live flights. Earlier I cut page load time by 60% at Taj Games. I like owning a feature from requirement to release, which is how Tripare describes this role. I can join within a month.</p><p><span class="tag">Check</span>Your notes say “60% and reduced crash rates”. Your CV ties the 60% to load time at Taj Games. Say that, and only mention crash numbers you can back up.</p>`],
+["Gap since April 2026",`<p class="say">I took a planned break for family caregiving during a pregnancy and early childcare. That has settled, I’m ready to work full time and can join within a month.</p>`],
+["Why you left Taj Games and Conneqt",`<p>GridLogic reduced the team after the 28% GST on real-money gaming hit revenue. Conneqt’s engagement ended when the project completed. Both are factual, say them once.</p>`],
+["6+ years but the role says 3–5",`<p class="say">I want a product team where I own features end to end. My extra experience means I work independently, review code and help with architecture.</p>`],
+["Where you are strong vs where to prepare",`<div class="tw"><table><tr><th>Tripare asks</th><th>Your evidence</th><th>Status</th></tr><tr><td>React Native, TS, REST</td><td>IndiGo, MarketBrief, Taj Games</td><td>Strong</td></tr><tr><td>Performance, debugging</td><td>60% load gain, RN upgrades</td><td>Strong</td></tr><tr><td>Expo</td><td>Expo and EAS on CV</td><td>Strong</td></tr><tr><td>Store releases, Fastlane</td><td>Jenkins, GitHub Actions, OTA. Store steps not on CV</td><td>Prepare</td></tr><tr><td>Push, deep linking</td><td>Not on CV</td><td>Prepare</td></tr></table></div>`]]},
 
-// group by category, preserving first-seen order
-const catOrder = [];
-const byCat = {};
-DATA.forEach(d => {
-  if(!byCat[d.cat]){ byCat[d.cat] = []; catOrder.push(d.cat); }
-  byCat[d.cat].push(d);
+{id:"core",n:"React Native",lead:"FlatList, hooks, state, folder structure.",q:[
+["FlatList: how it works and a full example",`<p>FlatList is virtualised: it renders only items near the viewport and recycles the rest, so memory stays flat.</p><pre>const Row = React.memo(({ item, onPress }: Props) =&gt; (
+  &lt;Pressable onPress={() =&gt; onPress(item.id)}&gt;
+    &lt;Text&gt;{item.name}&lt;/Text&gt;
+  &lt;/Pressable&gt;
+));
+
+export default function Users({ data }: { data: User[] }) {
+  const [q, setQ] = useState("");
+  const list = useMemo(() =&gt;
+    data.filter(u =&gt; u.name.toLowerCase().includes(q.toLowerCase())), [data, q]);
+  const onPress = useCallback((id: string) =&gt; nav.navigate("User", { id }), []);
+  const render = useCallback(({ item }) =&gt; &lt;Row item={item} onPress={onPress} /&gt;, [onPress]);
+
+  return (
+    &lt;FlatList
+      data={list}
+      renderItem={render}
+      keyExtractor={u =&gt; u.id}
+      getItemLayout={(_, i) =&gt; ({ length: 56, offset: 56 * i, index: i })}
+      initialNumToRender={10}
+      windowSize={7}
+      removeClippedSubviews
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.5}
+      ListEmptyComponent={&lt;Text&gt;No users found.&lt;/Text&gt;}
+    /&gt;
+  );
+}</pre><ul><li>Never use <code>ScrollView</code> + map for long data.</li><li>Stable keys, memoised rows, no inline arrow functions in <code>renderItem</code>.</li><li><code>getItemLayout</code> only for fixed-height rows. FlashList is the faster option for huge lists.</li><li>Your machine-coding task (search + active toggle) is the same <code>useMemo</code> filter pattern above.</li></ul>`],
+["Hooks you should explain, and when to use useCallback",`<ul><li><b>useState / useReducer:</b> local state; reducer for multi-field or complex transitions.</li><li><b>useEffect:</b> side effects. Return cleanup for timers, listeners, subscriptions. Dependency array must be complete.</li><li><b>useRef:</b> mutable value that does not re-render; refs to components; store interval ids.</li><li><b>useMemo:</b> cache an expensive derived value.</li><li><b>useCallback:</b> keep a function reference stable when passing it to memoised children or effect dependencies. Not needed everywhere; it has its own cost.</li><li><b>useLayoutEffect, useContext, useTransition:</b> measure layout before paint; read context; mark low-priority updates.</li><li><b>Custom hooks:</b> reuse logic (<code>useDebounce</code>, <code>useNetworkStatus</code>, <code>useAuth</code>) so screens stay thin.</li></ul>`],
+["Stopwatch with hooks (asked in your notes)",`<pre>function Stopwatch() {
+  const [s, setS] = useState(0);
+  const [on, setOn] = useState(false);
+  useEffect(() =&gt; {
+    if (!on) return;
+    const id = setInterval(() =&gt; setS(v =&gt; v + 1), 1000);
+    return () =&gt; clearInterval(id);
+  }, [on]);
+  return (&lt;&gt;
+    &lt;Text&gt;{s}s&lt;/Text&gt;
+    &lt;Button title={on ? "Pause" : "Start"} onPress={() =&gt; setOn(!on)} /&gt;
+    &lt;Button title="Reset" onPress={() =&gt; { setOn(false); setS(0); }} /&gt;
+  &lt;/&gt;);
+}</pre><p>Point out: functional update <code>v =&gt; v + 1</code> avoids stale state; cleanup prevents leaked intervals.</p>`],
+["State management: how to choose",`<ul><li><b>Local state</b> first. Lift only when two components need it.</li><li><b>Context:</b> low-change values (theme, auth session). Re-renders all consumers.</li><li><b>Zustand:</b> small global store, selectors avoid extra renders.</li><li><b>Redux Toolkit:</b> large teams, complex flows, middleware (Saga for effects like <code>call</code>, <code>put</code>, <code>takeLatest</code>), devtools.</li><li><b>Server state</b> (trips, bookings): React Query or similar cache, not a global store.</li></ul><p class="say">“I separate UI state, global client state and server state, and pick the lightest tool for each.”</p>`],
+["Folder structure and architecture",`<pre>src/
+  app/            navigation, providers, app entry
+  features/
+    auth/         screens, components, hooks, api, types
+    bookings/
+    expenses/
+  shared/
+    components/   Button, Input, List (reusable, typed)
+    hooks/  utils/  theme/  api/ (axios client)
+  native/         native module wrappers
+  config/         env, constants, remote config</pre><ul><li>Feature folders keep ownership clear; shared code has no feature imports.</li><li>Screens are thin; logic in hooks; API calls in one typed client with interceptors.</li><li>Path aliases, strict TS, ESLint + Prettier, absolute imports.</li><li>Proof: Shell + Mini Apps at IndiGo forced clean boundaries between teams.</li></ul>`],
+["Pure components and reconciliation",`<ul><li><b>PureComponent / React.memo:</b> skips re-render when props are shallow equal. Useless if you pass new object or function props each render.</li><li><b>Reconciliation:</b> React diffs the new element tree against the old one. Different type means remount. Same type updates in place. Keys identify list items.</li><li><b>HOC:</b> function that takes a component and returns an enhanced one. Hooks have mostly replaced it.</li></ul>`]]},
+
+{id:"arch",n:"Architecture",lead:"Old vs new, native modules, Metro, Hermes.",q:[
+["Old vs New Architecture",`<div class="tw"><table><tr><th>Old</th><th>New</th></tr><tr><td>Async Bridge, JSON serialisation</td><td>JSI, direct JS to native calls</td></tr><tr><td>Native Modules, loaded at startup</td><td>TurboModules, lazy and typed</td></tr><tr><td>Legacy UI Manager</td><td>Fabric renderer, concurrent features</td></tr><tr><td>Bottleneck in gestures, scroll, animation</td><td>Lower overhead, better startup</td></tr></table></div><p class="say">“The main difference is that the old architecture uses the Bridge, while the new one uses JSI with TurboModules and Fabric, removing the Bridge and improving performance, startup and responsiveness.”</p><p>If asked “Have you used it?” say what is true: you handled React Native upgrades at IndiGo, checked third-party library compatibility and verified features after migration.</p>`],
+["How do you build a native module?",`<p><b>TS Spec → Codegen → TurboModule → Kotlin/Swift → Native API → Promise/Event → JS</b></p><ol><li>Define the JS API as a TypeScript TurboModule spec.</li><li>Codegen generates native interfaces.</li><li>Implement in Kotlin (Android) and Swift/Objective-C (iOS).</li><li>Register the module. JS calls it through <code>TurboModuleRegistry</code>.</li><li>Async results return as Promises; continuous updates as events.</li></ol><p>You built a custom native library for scoped storage at Vcraft, so mention it.</p>`],
+["What is Metro?",`<p>Metro is React Native’s default JS bundler. It resolves imports from the entry file, transforms JS/TS, processes assets, builds the dependency graph and outputs one bundle that the app loads. In release builds the bundle is precompiled to Hermes bytecode.</p>`],
+["Hermes, JSI and the JS engine",`<p>Hermes is the default engine: bytecode precompiled at build time, so faster startup and lower memory. JSI is the C++ layer that lets JS hold direct references to native objects.</p>`],
+["Module Federation in React Native (your IndiGo work)",`<ul><li>Shell app loads mini apps at runtime; each mini app is built and deployed independently.</li><li>Shared dependencies (react, react-native, navigation) must be singletons with compatible versions.</li><li>Handle a mini app failing to load with a fallback screen.</li><li>Test contract between shell and mini apps; version it.</li></ul>`]]},
+
+{id:"native",n:"Android & iOS",lead:"Platform questions in your notes.",q:[
+["AndroidManifest.xml",`<p>Android reads it before launching. It declares package name, app name and icon, Activities, Services, Receivers, Providers, permissions, launcher activity, deep-link intent filters. Min and target SDK usually live in Gradle.</p>`],
+["AppDelegate (iOS)",`<p>iOS entry point. Receives lifecycle events: launch, active, background, push registration, deep links, background tasks. In React Native it starts the React Native app (or via SceneDelegate on newer iOS).</p>`],
+["Lifecycles",`<p><b>Android Activity:</b> onCreate → onStart → onResume (visible, interactive) → onPause → onStop → onDestroy. Returning from background: onRestart → onStart → onResume.</p><p><b>iOS:</b> Not Running → Inactive → Active → Background → Suspended. Hooks: didFinishLaunching, didBecomeActive, willResignActive, didEnterBackground, willEnterForeground, willTerminate.</p><p>In RN use <code>AppState</code> to react to foreground and background.</p>`],
+["Activity vs Fragment",`<p>An Activity is a full screen and can exist alone. A Fragment is a reusable part of a screen hosted inside an Activity, with its own lifecycle tied to the host. Key detail: <code>onDestroyView()</code> destroys the Fragment’s view while the Fragment object may live on. RN comparison: Activity ≈ native screen; Fragment ≈ reusable UI piece.</p>`],
+["Gradle",`<p>Android’s build tool: dependencies, compile, APK/AAB output, build variants (debug, release), flavors, signing. Commands: <code>./gradlew clean</code>, <code>assembleDebug</code>, <code>assembleRelease</code>, <code>bundleRelease</code>, <code>installDebug</code>.</p>`],
+["CocoaPods, Podfile, Podfile.lock",`<ul><li>CocoaPods is iOS’s dependency manager (npm for JS, Gradle for Android).</li><li>A Pod is an iOS library such as Firebase or React-Core.</li><li>Podfile lists what to install; Podfile.lock pins exact versions so everyone and CI match (like package-lock).</li><li><code>pod install</code> reads Podfile, downloads pods, builds the Pods project, writes the lock, updates the workspace.</li><li>Open <code>.xcworkspace</code>, not <code>.xcodeproj</code>.</li><li>After adding a native library: <code>cd ios && pod install</code>.</li></ul>`],
+["Service, IntentService, Data Binding",`<p>Service: background work, runs on the main thread by default. IntentService: own worker thread, stops itself, now deprecated. Use WorkManager for deferrable work, a foreground service when the user must see it. Data Binding binds XML views to a ViewModel, cutting <code>findViewById</code> boilerplate; common in MVVM.</p>`],
+["Push notifications: full flow",`<ol><li>App asks permission (required on iOS, and Android 13+).</li><li>Gets a device token from FCM (Android) or APNs (iOS, usually via FCM).</li><li>Sends token to backend; refresh it when it changes; remove on logout.</li><li>Backend sends to FCM/APNs, which deliver to the device.</li><li>Handle three states: foreground (<code>onMessage</code>, show it yourself), background, quit (read the notification that opened the app).</li></ol><p>Android needs notification channels (8+). Libraries: <code>@react-native-firebase/messaging</code> plus Notifee for display. Local notifications need no server.</p>`],
+["Deep linking",`<ul><li>Custom scheme (<code>tripare://trip/123</code>), Universal Links (iOS), App Links (Android).</li><li>React Navigation <code>linking</code> config maps URLs to screens; handle cold and warm start.</li><li>Validate scheme, host, path and params. Never trust values like <code>amount</code> in a link; the backend decides.</li><li>If logged out, save the link, login, then continue.</li><li>Test: <code>adb shell am start -a android.intent.action.VIEW -d "tripare://trip/123"</code> and <code>xcrun simctl openurl booted "tripare://trip/123"</code>.</li></ul>`]]},
+
+{id:"perf",n:"Performance",lead:"Optimisation questions with steps.",q:[
+["App is slow. What do you do, step by step?",`<ol><li>Define the symptom: slow startup, janky scroll, slow screen, memory growth.</li><li>Measure in a release build, not debug. Use React DevTools Profiler, Hermes profiler, Flipper or Perf Monitor, Android Studio Profiler, Xcode Instruments.</li><li>Find the cause: wasted re-renders, heavy JS on the main thread, big images, long lists, large bundle.</li><li>Fix one thing, re-measure, keep what helped.</li><li>Add monitoring so regressions show up.</li></ol>`],
+["Rendering and JS thread",`<ul><li><code>React.memo</code>, <code>useMemo</code>, <code>useCallback</code> where profiling shows churn.</li><li>Split state so a change does not re-render the whole tree; use selectors.</li><li>Use <code>InteractionManager</code> or defer heavy work after a transition.</li><li>Animations with Reanimated on the UI thread and <code>useNativeDriver</code>.</li><li>Remove <code>console.log</code> in production.</li></ul>`],
+["Startup time",`<ul><li>Hermes on; inline requires or lazy load screens.</li><li>Defer non-critical SDK init until after first render.</li><li>Keep splash up only until the first screen is ready.</li><li>Measure with <code>performance.timeOrigin</code> and <code>performance.now()</code>: time from JS init to first screen ready.</li></ul>`],
+["Images, bundle size, memory",`<ul><li>Right-sized images, caching library (FastImage), WebP.</li><li>Remove unused libraries; analyse the bundle; enable R8 and shrinkResources on Android.</li><li>Clean up listeners, timers and subscriptions in effect cleanup to stop leaks.</li></ul>`],
+["Inline cache, execution context, IIFE",`<p>Inline caching: the JS engine caches object property lookup info to speed repeated access. Execution context: the environment holding variables, scope and <code>this</code> while code runs. IIFE: a function that runs immediately, creating a private scope.</p>`],
+["Production monitoring architecture",`<p>App (JS errors, native crashes, performance) → Sentry or Crashlytics → stack trace, device and session context → dashboard and alerts → fix → gradual release → monitor again.</p><p class="say">“If crash rate rose in 2.5.0, I compare crash-free users with 2.4.0, group by version, OS and device, check breadcrumbs near the failing flow, fix and add a regression test, release to a small percentage, and confirm the rate drops before going to everyone.”</p>`]]},
+
+{id:"debug",n:"Debugging",lead:"Find and fix issues on Android and iOS.",q:[
+["General method, step by step",`<ol><li>Reproduce: OS version, device, debug vs release, Hermes, network.</li><li>Decide: JS error or native crash? Red screen and Metro log mean JS. App closes silently means native.</li><li>Read the right log (below).</li><li>Isolate: remove recent changes, bisect commits, test on another device.</li><li>Fix, add a test or checklist item, test both platforms.</li><li>Release gradually and watch Sentry or Crashlytics.</li></ol>`],
+["Android: debug step by step",`<ol><li>Start the bundler and device: <code>adb devices</code>, <code>npx react-native run-android</code>.</li><li>Native logs: <code>adb logcat *:E</code> or Logcat in Android Studio; filter by app package.</li><li>Crash on launch: look for <code>FATAL EXCEPTION</code> and the first “Caused by”.</li><li>Build failure: <code>cd android && ./gradlew clean</code>, then rebuild; check Gradle, JDK and SDK versions, duplicate libraries.</li><li>Release-only crash: usually R8 stripping classes; add keep rules in <code>proguard-rules.pro</code>.</li><li>Metro connection problems: <code>adb reverse tcp:8081 tcp:8081</code>.</li><li>Check manifest: permissions, exported components, cleartext traffic.</li></ol>`],
+["iOS: debug step by step",`<ol><li>Install pods after any native change: <code>cd ios && pod install</code>; open the workspace.</li><li>Run from Xcode to see the console and breakpoints; use Xcode Debug Navigator and Instruments for memory and CPU.</li><li>Crash logs: Xcode Organizer or device console; check the symbolicated stack.</li><li>Build failure: Product → Clean Build Folder; delete DerivedData; <code>pod deintegrate && pod install</code> if pods are corrupted.</li><li>Signing errors: check certificate, App ID, provisioning profile and capabilities.</li><li>Missing permission text in Info.plist makes the app crash on access (camera, location, photos).</li></ol>`],
+["JS debugging tools",`<ul><li>React Native DevTools / Hermes debugger, React DevTools, Flipper (network, layout, logs).</li><li>Reactotron or network inspector for API calls.</li><li>Sentry breadcrumbs for production.</li></ul>`],
+["Works on one platform only",`<p>Check platform differences: safe areas, keyboard behaviour, permissions, shadow vs elevation, font rendering, <code>Platform.select</code>. Then read the native log of the failing platform, not the JS log alone.</p>`],
+["Quick traps from your notes",`<ul><li><code>var a=[1,2,3]; var b=a; b.push(4); console.log(a)</code> prints <code>[1,2,3,4]</code>: arrays are references.</li><li>Loop with <code>let i</code> declared outside and <code>setTimeout</code> logging <code>i</code> prints <code>3</code> three times: one shared variable.</li><li>Normal function in an object: <code>this</code> is the object. Arrow function: <code>this</code> is inherited from outer scope (not the object).</li></ul>`]]},
+
+{id:"sec",n:"Security",lead:"Top answers from your security notes.",q:[
+["One-line answer to remember",`<p class="say">“I treat the React Native client as untrusted: protect credentials with Keychain or Keystore, use HTTPS, never ship real secrets, harden release builds, minimise sensitive data, and enforce authorization on the backend.”</p>`],
+["AsyncStorage vs Keychain/Keystore, JWT storage",`<p>AsyncStorage is plain persistent storage. Tokens go in Keychain (iOS) or Keystore (Android) via <code>react-native-keychain</code>. Use short-lived access tokens, refresh tokens with rotation and revocation, HTTPS.</p>`],
+["Can we hide API secrets in the app? Are .env files safe?",`<p>No. Anything in the APK or IPA can be extracted. <code>.env</code> is fine for config like the API URL, not for secrets. Keep real secrets on the backend.</p>`],
+["Certificate pinning, MITM, HTTPS",`<p>Pinning checks the server certificate or public key against an expected one, reducing MITM risk. It needs a rotation plan or an expired cert breaks the app. Block cleartext on Android (<code>usesCleartextTraffic="false"</code>); configure ATS on iOS.</p>`],
+["Is frontend authorization enough? Auth vs authz",`<p>No. UI checks only hide screens. Authentication is who you are; authorization is what you can do, enforced by the backend on every request.</p>`],
+["Reverse engineering, release hardening, logs",`<ul><li>R8/ProGuard with <code>minifyEnabled</code> and <code>shrinkResources</code>, no debug in release.</li><li>No tokens, passwords or personal data in logs or crash reports.</li><li>Obfuscation slows attackers; it does not stop them.</li></ul>`],
+["Biometrics, root detection, WebView, replay attacks",`<ul><li>Biometrics unlock a securely stored credential; they are not server identity.</li><li>Root or jailbreak detection is one extra signal, not the only control.</li><li>WebView: allowlist domains, limit injected JS and navigation.</li><li>Replay: short expiry, rotation, revocation, nonces or request signing.</li></ul>`]]},
+
+{id:"rel",n:"Releases",lead:"Play Store, App Store, Fastlane. A named duty of this role.",q:[
+["Android release steps",`<ol><li>Bump <code>versionCode</code> (integer, must increase) and <code>versionName</code> (shown to users).</li><li>Build a signed AAB: <code>./gradlew bundleRelease</code>.</li><li>Upload to Play Console: internal → closed → open → production.</li><li>Complete listing, content rating, Data Safety form.</li><li>Submit, then use a staged rollout (e.g. 10%) and watch crashes.</li></ol>`],
+["APK vs AAB, keystore, Play App Signing",`<p>An AAB lets Google Play build optimised APKs per device (smaller downloads). The keystore holds the signing key; with Play App Signing, Google holds the app key and you keep an upload key. Lose the upload key without that setup and you cannot update. Back it up securely.</p>`],
+["iOS release steps",`<ol><li>Create the app in App Store Connect with its bundle ID.</li><li>Certificates and provisioning profiles (or automatic signing, or Fastlane match).</li><li>Bump the build number, archive in Xcode.</li><li>Validate and upload (Organizer or Transporter), then TestFlight.</li><li>Complete metadata, screenshots, App Privacy details.</li><li>Submit for review; choose manual, scheduled or phased release.</li></ol>`],
+["Certificate, App ID, provisioning profile",`<p>Certificate identifies the developer and signs the app. App ID identifies the app and capabilities (push, App Groups). Profile ties certificate, App ID and devices together. Most signing failures come from a mismatch among these. Build types: Development, Ad Hoc, App Store, Enterprise.</p>`],
+["TestFlight, review time, common rejections",`<p>TestFlight: up to 100 internal testers (no review), up to 10,000 external (light review). Review takes hours to a couple of days. Common rejections: crashes, incomplete metadata, privacy label not matching SDK behaviour, broken privacy-policy link, excess permissions.</p>`],
+["Fastlane and CI/CD",`<ul><li><code>match</code> signing, <code>gym</code> iOS build, <code>pilot</code> TestFlight, <code>supply</code> Play upload.</li><li>One lane per environment; run from GitHub Actions or Jenkins (both on your CV).</li><li>Secrets in CI secret store, never in git.</li><li>One source of truth for version, synced to <code>versionCode/versionName</code> and <code>CFBundleVersion/ShortVersion</code>.</li></ul>`],
+["Scenario: urgent fix while review is pending",`<p>iOS: wait, or remove the build from review and submit the fixed build. Android: upload a new build to the track. Then use an expedited review request only for real emergencies.</p>`],
+["Scenario: build works locally, fails in TestFlight or Play",`<p>Check: it is a release build with correct endpoints; certificates and profiles valid, or the right keystore used; build number incremented (stores reject duplicates); entitlements and permissions present in the signed build.</p>`],
+["OTA and Remote Config (IndiGo)",`<p>OTA (RN Stallion, EAS Update) ships JS-only fixes without store review. Native changes always go through stores. Remote Config gates risky features and enables A/B tests with no release.</p>`]]},
+
+{id:"ts",n:"TS & JS",lead:"TypeScript clarity plus coding rounds.",q:[
+["type vs interface, any vs unknown, generics",`<pre>function first&lt;T&gt;(a: T[]): T | undefined { return a[0]; }
+type Booking = { id: string; city: string; price: number };
+type Preview = Pick&lt;Booking, "id" | "city"&gt;;</pre><ul><li>Interface extends and merges; type handles unions and mapped types.</li><li><code>unknown</code> forces narrowing; <code>any</code> disables checks.</li><li>Know Partial, Pick, Omit, Record, ReturnType; narrowing via typeof, in, discriminated unions.</li><li>Types vanish at runtime; validate API data with Zod for critical flows.</li><li>Type navigation with a param list so <code>navigate("Trip", { id })</code> is checked.</li></ul>`],
+["Coding questions in your notes",`<pre>// second largest
+const second = a =&gt; { let m = -Infinity, s = -Infinity;
+  for (const n of a) { if (n &gt; m) { s = m; m = n; } else if (n &lt; m &amp;&amp; n &gt; s) s = n; }
+  return s; };
+// reverse string
+const rev = s =&gt; { let r = ""; for (let i = s.length - 1; i &gt;= 0; i--) r += s[i]; return r; };
+// palindrome
+const pal = s =&gt; { let i = 0, j = s.length - 1;
+  while (i &lt; j) if (s[i++] !== s[j--]) return false; return true; };
+// duplicates
+const dup = a =&gt; { const seen = new Set(), d = new Set();
+  a.forEach(x =&gt; seen.has(x) ? d.add(x) : seen.add(x)); return [...d]; };</pre>`],
+["Generator, HOC, class lifecycle, CSS",`<ul><li>Generator: <code>function*</code> that pauses at <code>yield</code> and resumes; Saga uses them.</li><li>Class lifecycle: mounting (constructor, render, componentDidMount), updating (shouldComponentUpdate, componentDidUpdate), unmounting (componentWillUnmount).</li><li>Flex vs Grid: flex is one dimension, grid is two. CSS positions: static, relative, absolute, fixed, sticky.</li></ul>`]]},
+
+{id:"ask",n:"Ask them",lead:"Pick three or four.",q:[
+["Questions for Tripare",`<ul><li>What does a release cycle look like, and how much is automated?</li><li>Which React Native and Expo versions are you on? Is the New Architecture enabled?</li><li>How are push notifications and deep links used in the travel flow?</li><li>How do product, design and backend hand requirements to mobile?</li><li>What would success look like in the first 90 days?</li><li>How do you monitor crashes and roll back after a release?</li></ul>`],
+["Day-before checklist",`<ul><li>Rehearse intro and gap answer aloud.</li><li>Prepare one real release story and one performance story.</li><li>Revise push, deep link, Fastlane and signing flows.</li><li>Test mic, camera and internet; keep your CV open.</li></ul>`]]}
+];
+var f=document.getElementById('f'),m=document.getElementById('m');
+S.forEach(function(s,i){
+ var b=document.createElement('button');b.textContent=s.n;b.setAttribute('aria-pressed',i===0);b.onclick=function(){show(s.id)};f.appendChild(b);
+ var e=document.createElement('section');e.id=s.id;
+ e.innerHTML='<h2>'+s.n+'</h2><p class="lead">'+s.lead+'</p><div class="t"><button class="o">Open all</button><button class="c">Close all</button></div>'+s.q.map(function(x){return '<details><summary>'+x[0]+'</summary><div class="a">'+x[1]+'</div></details>'}).join('');
+ e.querySelector('.o').onclick=function(){e.querySelectorAll('details').forEach(function(d){d.open=true})};
+ e.querySelector('.c').onclick=function(){e.querySelectorAll('details').forEach(function(d){d.open=false})};
+ m.appendChild(e);
 });
-
-document.getElementById('statTotal').textContent = DATA.length;
-document.getElementById('statCats').textContent = catOrder.length;
-
-let activeCat = 'all';
-let query = '';
-
-function escapeHtml(s){
-  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function show(id){
+ S.forEach(function(s,i){f.children[i].setAttribute('aria-pressed',s.id===id);document.getElementById(s.id).classList.toggle('hide',s.id!==id)});
+ window.scrollTo(0,0);try{history.replaceState(null,'','#'+id)}catch(e){}
 }
-
-function highlight(text, q){
-  const safe = escapeHtml(text);
-  if(!q) return safe;
-  try{
-    const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'ig');
-    return safe.replace(re, '<mark>$1</mark>');
-  }catch(e){ return safe; }
-}
-
-function matches(item, q){
-  if(!q) return true;
-  const hay = (item.q + ' ' + item.a + ' ' + item.code + ' ' + item.cat).toLowerCase();
-  return hay.includes(q.toLowerCase());
-}
-
-function renderSidebar(){
-  const list = document.getElementById('catList');
-  let html = '';
-  html += `<button class="cat-btn ${activeCat==='all'?'active':''}" data-cat="all">
-              <span>All topics</span><span class="n">${DATA.length}</span>
-            </button>`;
-  catOrder.forEach(cat => {
-    html += `<button class="cat-btn ${activeCat===cat?'active':''}" data-cat="${escapeHtml(cat)}">
-                <span>${escapeHtml(cat)}</span><span class="n">${byCat[cat].length}</span>
-              </button>`;
-  });
-  list.innerHTML = html;
-  list.querySelectorAll('.cat-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      activeCat = btn.dataset.cat;
-      render();
-      if(window.innerWidth <= 860){
-        document.getElementById('main').scrollIntoView({behavior:'smooth', block:'start'});
-      }
-    });
-  });
-}
-
-let openState = {}; // key -> bool
-
-function cardKey(cat, idx){ return cat + '::' + idx; }
-
-function render(){
-  renderSidebar();
-  const main = document.getElementById('main');
-  const q = query.trim();
-
-  let cats = activeCat === 'all' ? catOrder : [activeCat];
-  let totalShown = 0;
-  let html = '';
-
-  cats.forEach(cat => {
-    const items = byCat[cat].filter(it => matches(it, q));
-    if(items.length === 0) return;
-    totalShown += items.length;
-    html += `<div class="cat-group">
-      <div class="cat-heading">
-        <h2>${escapeHtml(cat)}</h2>
-        <span class="count">${items.length} question${items.length===1?'':'s'}</span>
-      </div>`;
-    items.forEach((it) => {
-      const globalIdx = DATA.indexOf(it);
-      const key = cardKey(it.cat, globalIdx);
-      const isOpen = !!openState[key] || (q.length > 1);
-      const hasCode = it.code && it.code.trim().length > 0;
-      const looksLikeCode = hasCode && it.lang && it.lang !== '';
-      html += `<div class="card ${isOpen?'open':''}" data-key="${key}">
-        <button class="card-q" data-key="${key}">
-          <span class="qmark">Q</span>
-          <span class="qtext">${highlight(it.q, q)}</span>
-          <span class="chev">›</span>
-        </button>
-        <div class="card-body">
-          <div class="card-body-inner">
-            <p class="answer">${highlight(it.a, q)}</p>
-            ${hasCode ? (looksLikeCode
-              ? `<div class="example-label">example</div><pre><code>${highlight(it.code, q)}</code></pre>`
-              : `<div class="example-label">example</div><div class="plain-example">${highlight(it.code, q)}</div>`)
-              : ''}
-          </div>
-        </div>
-      </div>`;
-    });
-    html += `</div>`;
-  });
-
-  if(totalShown === 0){
-    html = `<div class="empty-state">
-      <div class="glyph">∅</div>
-      <p>No matches for "<span style="color:var(--fg)">${escapeHtml(q)}</span>"</p>
-      <p>Try a shorter term, or clear the filter.</p>
-    </div>`;
-  }
-
-  main.innerHTML = html;
-
-  document.getElementById('resultCount').innerHTML =
-    q ? `<b>${totalShown}</b> match${totalShown===1?'':'es'} for "${escapeHtml(q)}"` : '';
-
-  main.querySelectorAll('.card-q').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const key = btn.dataset.key;
-      const card = main.querySelector(`.card[data-key="${CSS.escape(key)}"]`);
-      // read the ACTUAL current visual state (not a stale internal flag,
-      // which could be out of sync when a card was auto-opened by search)
-      const nowOpen = !card.classList.contains('open');
-      card.classList.toggle('open', nowOpen);
-      openState[key] = nowOpen;
-    });
-  });
-}
-
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', (e)=>{
-  query = e.target.value;
-  render();
-});
-
-document.getElementById('clearBtn').addEventListener('click', ()=>{
-  query = '';
-  searchInput.value = '';
-  activeCat = 'all';
-  render();
-  searchInput.focus();
-});
-
-document.addEventListener('keydown', (e)=>{
-  if(e.key === '/' && document.activeElement !== searchInput){
-    e.preventDefault();
-    searchInput.focus();
-  }
-  if(e.key === 'Escape' && document.activeElement === searchInput){
-    searchInput.blur();
-  }
-});
-
-render();
-</script>
-
-</body>
-</html>
+show((location.hash||'#pitch').slice(1)||'pitch');
+if(!document.getElementById(location.hash.slice(1)))show('pitch');
+</script></body></html>
