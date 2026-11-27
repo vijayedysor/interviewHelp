@@ -1,210 +1,1190 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="en">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>React Native Interview Prep – Vijay Gehlot</title>
+<title>React Live Coding Round: Prep Sheet</title>
+<meta name="color-scheme" content="dark">
 <style>
-:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#14161c;--panel:#1b1e26;--code:#0f1116;--line:#2a2e39;--text:#e4e7ee;--mute:#9aa1b2;--accent:#fff;--ok:#fff;
+box-sizing:border-box;color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:70px}
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:60px}
-body{margin:0;background:#000;color:#fff;font:16.5px/1.65 Georgia,serif}
-.w{max-width:880px;margin:0 auto;padding:0 22px}
-header{padding:56px 0 36px;border-bottom:1px solid #fff}
-h1{font-size:clamp(30px,6vw,54px);line-height:1.1;margin:0 0 12px;letter-spacing:-.02em}
-header p{margin:0;color:#ccc;max-width:60ch}
-nav{position:sticky;top:0;background:#000;border-bottom:1px solid #444;z-index:5;padding-top:env(safe-area-inset-top,0px)}
-nav .w{display:flex;overflow-x:auto;gap:2px}
-nav button,.t button{font:600 13.5px system-ui,sans-serif;background:#000;color:#aaa;border:0;border-bottom:3px solid transparent;padding:14px 12px;cursor:pointer;white-space:nowrap}
-nav button[aria-pressed=true]{color:#fff;border-bottom-color:#fff}
-nav button:hover{color:#fff}
-:focus-visible{outline:2px solid #fff;outline-offset:2px}
-h2{font-size:28px;margin:44px 0 4px}
-.lead{color:#bbb;margin:0 0 16px}
-.t{margin:0 0 12px}
-.t button{border:1px solid #666;padding:7px 12px;color:#fff;margin-right:8px}
-.t button:hover{background:#fff;color:#000}
-details{border-top:1px solid #444}
-details:last-of-type{border-bottom:1px solid #444}
-summary{cursor:pointer;list-style:none;padding:15px 34px 15px 0;font-weight:700;position:relative}
-summary::-webkit-details-marker{display:none}
-summary::after{content:"+";position:absolute;right:4px;top:10px;font:300 26px system-ui}
-details[open] summary::after{content:"\2212"}
-.a{padding:0 0 20px;max-width:70ch;color:#e6e6e6}
-.a p{margin:0 0 10px}.a ul,.a ol{margin:0 0 10px;padding-left:20px}.a li{margin-bottom:5px}
-.say{border-left:4px solid #fff;padding-left:14px;color:#fff}
-.tag{font:600 11.5px system-ui;background:#fff;color:#000;padding:1px 7px;margin-right:6px}
-code{font:13.5px ui-monospace,Menlo,monospace;background:#1a1a1a;border:1px solid #444;padding:0 5px;color:#fff}
-pre{font:13px/1.5 ui-monospace,Menlo,monospace;background:#111;border:1px solid #555;padding:13px;overflow-x:auto;margin:0 0 12px;color:#fff}
-.box{border:1px solid #fff;padding:16px 20px;margin:0 0 16px}
-.box h3{margin:0 0 6px;font-size:18px}
-.tw{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font:14.5px/1.5 system-ui;margin:0 0 14px}
-th,td{border:1px solid #555;padding:8px 10px;text-align:left;vertical-align:top}
-th{background:#fff;color:#000}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+header{padding:32px 20px 8px;max-width:960px;margin:0 auto}
+h1{font-size:1.9rem;margin:0 0 6px;letter-spacing:-.01em}
+header p{color:var(--mute);margin:0;max-width:62ch}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 20px}
+.bar div{max-width:960px;margin:0 auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input{flex:1 1 200px;background:var(--panel);border:1px solid var(--line);color:var(--text);padding:8px 12px;border-radius:6px;font:inherit}
+input:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chip{background:var(--panel);border:1px solid var(--line);color:var(--mute);padding:5px 12px;border-radius:99px;cursor:pointer;font:inherit;font-size:.85rem}
+.chip.on{color:var(--bg);background:var(--accent);border-color:var(--accent)}
+main{max-width:960px;margin:0 auto;padding:16px 20px 60px}
+.intro{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px 20px;margin-bottom:20px}
+.intro h2{margin:0 0 8px;font-size:1.1rem}
+.intro ul{margin:0;padding-left:20px;color:var(--mute)}
+.intro li b{color:var(--text);font-weight:600}
+section{border-top:1px solid var(--line);padding:22px 0 6px}
+section h3{margin:0 0 4px;font-size:1.15rem}
+section .tag{color:var(--accent);font-size:.82rem}
+section p{margin:4px 0 10px;color:var(--mute);font-size:.93rem}
+.wrap{position:relative}
+pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font:13px/1.55 ui-monospace,Consolas,Menlo,monospace;color:#d6dbe8}
+.copy{position:absolute;top:8px;right:8px;background:var(--panel);color:var(--mute);border:1px solid var(--line);border-radius:5px;padding:3px 10px;font-size:.78rem;cursor:pointer}
+.copy:hover{color:var(--text)}
 .hide{display:none}
-footer{border-top:1px solid #444;padding:24px;text-align:center;font:14px system-ui;color:#aaa}
-@media print{body{background:#fff;color:#000}nav,.t{display:none}.a{color:#000}details>*{display:block}}
-</style></head><body>
-<header><div class="w"><h1>React Native interview prep</h1>
-<p>Vijay Gehlot for Tripare. Built from your CV, the job post and your notes. Open a question, answer aloud, close it, repeat.</p></div></header>
-<nav><div class="w" id="f"></div></nav>
-<main class="w" id="m"></main>
-<footer>Say it in your own words. Only claim what you have done.</footer>
-<script>
-var S=[
-{id:"pitch",n:"Pitch",lead:"Your story, matched to Tripare.",q:[
-["Tell me about yourself",`<p class="say">I’m Vijay, a React and React Native engineer with 6+ years across aviation, fintech and media. At IndiGo I built a Shell App and Mini Apps setup with Module Federation so teams deploy independently, and I shipped the in-flight entertainment feature “Hello 6E”, validated on live flights. Earlier I cut page load time by 60% at Taj Games. I like owning a feature from requirement to release, which is how Tripare describes this role. I can join within a month.</p><p><span class="tag">Check</span>Your notes say “60% and reduced crash rates”. Your CV ties the 60% to load time at Taj Games. Say that, and only mention crash numbers you can back up.</p>`],
-["Gap since April 2026",`<p class="say">I took a planned break for family caregiving during a pregnancy and early childcare. That has settled, I’m ready to work full time and can join within a month.</p>`],
-["Why you left Taj Games and Conneqt",`<p>GridLogic reduced the team after the 28% GST on real-money gaming hit revenue. Conneqt’s engagement ended when the project completed. Both are factual, say them once.</p>`],
-["6+ years but the role says 3–5",`<p class="say">I want a product team where I own features end to end. My extra experience means I work independently, review code and help with architecture.</p>`],
-["Where you are strong vs where to prepare",`<div class="tw"><table><tr><th>Tripare asks</th><th>Your evidence</th><th>Status</th></tr><tr><td>React Native, TS, REST</td><td>IndiGo, MarketBrief, Taj Games</td><td>Strong</td></tr><tr><td>Performance, debugging</td><td>60% load gain, RN upgrades</td><td>Strong</td></tr><tr><td>Expo</td><td>Expo and EAS on CV</td><td>Strong</td></tr><tr><td>Store releases, Fastlane</td><td>Jenkins, GitHub Actions, OTA. Store steps not on CV</td><td>Prepare</td></tr><tr><td>Push, deep linking</td><td>Not on CV</td><td>Prepare</td></tr></table></div>`]]},
+.empty{color:var(--mute);padding:30px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>React live coding round: prep sheet</h1>
+  <p>Questions that match your JD: React core, hooks, Redux, REST, JWT, performance, plain JavaScript, TypeScript and Git. Type each one from memory, then say your approach out loud.</p>
+</header>
+<div class="bar"><div>
+  <input id="q" type="search" placeholder="Search: debounce, redux, jwt, memo...">
+  <span id="chips"></span>
+</div></div>
+<main>
+  <div class="intro">
+    <h2>How to run a live round</h2>
+    <ul>
+      <li><b>Clarify first.</b> Ask about edge cases, empty states and whether styling matters.</li>
+      <li><b>Get it working, then improve.</b> Naive version first, then loading and error states, then optimisation.</li>
+      <li><b>Narrate.</b> State why you pick useReducer over useState, or useMemo over a plain variable.</li>
+      <li><b>Name the traps.</b> Stable <code>key</code>, effect cleanup, stale closures, dependency arrays, no state mutation.</li>
+    </ul>
+  </div>
+  <div id="list"></div>
+  <p class="empty hide" id="empty">No match. Try another keyword.</p>
+</main>
 
-{id:"core",n:"React Native",lead:"FlatList, hooks, state, folder structure.",q:[
-["FlatList: how it works and a full example",`<p>FlatList is virtualised: it renders only items near the viewport and recycles the rest, so memory stays flat.</p><pre>const Row = React.memo(({ item, onPress }: Props) =&gt; (
-  &lt;Pressable onPress={() =&gt; onPress(item.id)}&gt;
-    &lt;Text&gt;{item.name}&lt;/Text&gt;
-  &lt;/Pressable&gt;
-));
+<!-- Each block: category | title | note -->
+<script type="text/plain" data-cat="Hooks" data-title="Counter with useState" data-note="Warm-up. Use the functional update form when the next state depends on the previous.">
+function Counter() {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <button onClick={() => setCount(c => c - 1)}>-</button>
+      <span>{count}</span>
+      <button onClick={() => setCount(c => c + 1)}>+</button>
+      <button onClick={() => setCount(0)}>Reset</button>
+    </div>
+  );
+}
+</script>
 
-export default function Users({ data }: { data: User[] }) {
-  const [q, setQ] = useState("");
-  const list = useMemo(() =&gt;
-    data.filter(u =&gt; u.name.toLowerCase().includes(q.toLowerCase())), [data, q]);
-  const onPress = useCallback((id: string) =&gt; nav.navigate("User", { id }), []);
-  const render = useCallback(({ item }) =&gt; &lt;Row item={item} onPress={onPress} /&gt;, [onPress]);
+<script type="text/plain" data-cat="Hooks" data-title="Todo list (add, toggle, delete, filter)" data-note="The most common task. Immutable updates, stable ids as keys.">
+function Todos() {
+  const [items, setItems] = useState([]);
+  const [text, setText] = useState('');
+  const [filter, setFilter] = useState('all');
+
+  const add = e => {
+    e.preventDefault();
+    if (!text.trim()) return;
+    setItems(prev => [...prev, { id: Date.now(), text, done: false }]);
+    setText('');
+  };
+  const toggle = id =>
+    setItems(prev => prev.map(t => t.id === id ? { ...t, done: !t.done } : t));
+  const remove = id => setItems(prev => prev.filter(t => t.id !== id));
+
+  const visible = items.filter(t =>
+    filter === 'all' ? true : filter === 'done' ? t.done : !t.done);
 
   return (
-    &lt;FlatList
-      data={list}
-      renderItem={render}
-      keyExtractor={u =&gt; u.id}
-      getItemLayout={(_, i) =&gt; ({ length: 56, offset: 56 * i, index: i })}
-      initialNumToRender={10}
-      windowSize={7}
-      removeClippedSubviews
-      onEndReached={loadMore}
-      onEndReachedThreshold={0.5}
-      ListEmptyComponent={&lt;Text&gt;No users found.&lt;/Text&gt;}
-    /&gt;
+    <>
+      <form onSubmit={add}>
+        <input value={text} onChange={e => setText(e.target.value)} />
+        <button>Add</button>
+      </form>
+      {['all', 'active', 'done'].map(f =>
+        <button key={f} onClick={() => setFilter(f)}>{f}</button>)}
+      <ul>
+        {visible.map(t => (
+          <li key={t.id}>
+            <input type="checkbox" checked={t.done} onChange={() => toggle(t.id)} />
+            <span style={{ textDecoration: t.done ? 'line-through' : 'none' }}>{t.text}</span>
+            <button onClick={() => remove(t.id)}>x</button>
+          </li>
+        ))}
+      </ul>
+    </>
   );
-}</pre><ul><li>Never use <code>ScrollView</code> + map for long data.</li><li>Stable keys, memoised rows, no inline arrow functions in <code>renderItem</code>.</li><li><code>getItemLayout</code> only for fixed-height rows. FlashList is the faster option for huge lists.</li><li>Your machine-coding task (search + active toggle) is the same <code>useMemo</code> filter pattern above.</li></ul>`],
-["Hooks you should explain, and when to use useCallback",`<ul><li><b>useState / useReducer:</b> local state; reducer for multi-field or complex transitions.</li><li><b>useEffect:</b> side effects. Return cleanup for timers, listeners, subscriptions. Dependency array must be complete.</li><li><b>useRef:</b> mutable value that does not re-render; refs to components; store interval ids.</li><li><b>useMemo:</b> cache an expensive derived value.</li><li><b>useCallback:</b> keep a function reference stable when passing it to memoised children or effect dependencies. Not needed everywhere; it has its own cost.</li><li><b>useLayoutEffect, useContext, useTransition:</b> measure layout before paint; read context; mark low-priority updates.</li><li><b>Custom hooks:</b> reuse logic (<code>useDebounce</code>, <code>useNetworkStatus</code>, <code>useAuth</code>) so screens stay thin.</li></ul>`],
-["Stopwatch with hooks (asked in your notes)",`<pre>function Stopwatch() {
-  const [s, setS] = useState(0);
-  const [on, setOn] = useState(false);
-  useEffect(() =&gt; {
-    if (!on) return;
-    const id = setInterval(() =&gt; setS(v =&gt; v + 1), 1000);
-    return () =&gt; clearInterval(id);
-  }, [on]);
-  return (&lt;&gt;
-    &lt;Text&gt;{s}s&lt;/Text&gt;
-    &lt;Button title={on ? "Pause" : "Start"} onPress={() =&gt; setOn(!on)} /&gt;
-    &lt;Button title="Reset" onPress={() =&gt; { setOn(false); setS(0); }} /&gt;
-  &lt;/&gt;);
-}</pre><p>Point out: functional update <code>v =&gt; v + 1</code> avoids stale state; cleanup prevents leaked intervals.</p>`],
-["State management: how to choose",`<ul><li><b>Local state</b> first. Lift only when two components need it.</li><li><b>Context:</b> low-change values (theme, auth session). Re-renders all consumers.</li><li><b>Zustand:</b> small global store, selectors avoid extra renders.</li><li><b>Redux Toolkit:</b> large teams, complex flows, middleware (Saga for effects like <code>call</code>, <code>put</code>, <code>takeLatest</code>), devtools.</li><li><b>Server state</b> (trips, bookings): React Query or similar cache, not a global store.</li></ul><p class="say">“I separate UI state, global client state and server state, and pick the lightest tool for each.”</p>`],
-["Folder structure and architecture",`<pre>src/
-  app/            navigation, providers, app entry
-  features/
-    auth/         screens, components, hooks, api, types
-    bookings/
-    expenses/
-  shared/
-    components/   Button, Input, List (reusable, typed)
-    hooks/  utils/  theme/  api/ (axios client)
-  native/         native module wrappers
-  config/         env, constants, remote config</pre><ul><li>Feature folders keep ownership clear; shared code has no feature imports.</li><li>Screens are thin; logic in hooks; API calls in one typed client with interceptors.</li><li>Path aliases, strict TS, ESLint + Prettier, absolute imports.</li><li>Proof: Shell + Mini Apps at IndiGo forced clean boundaries between teams.</li></ul>`],
-["Pure components and reconciliation",`<ul><li><b>PureComponent / React.memo:</b> skips re-render when props are shallow equal. Useless if you pass new object or function props each render.</li><li><b>Reconciliation:</b> React diffs the new element tree against the old one. Different type means remount. Same type updates in place. Keys identify list items.</li><li><b>HOC:</b> function that takes a component and returns an enhanced one. Hooks have mostly replaced it.</li></ul>`]]},
-
-{id:"arch",n:"Architecture",lead:"Old vs new, native modules, Metro, Hermes.",q:[
-["Old vs New Architecture",`<div class="tw"><table><tr><th>Old</th><th>New</th></tr><tr><td>Async Bridge, JSON serialisation</td><td>JSI, direct JS to native calls</td></tr><tr><td>Native Modules, loaded at startup</td><td>TurboModules, lazy and typed</td></tr><tr><td>Legacy UI Manager</td><td>Fabric renderer, concurrent features</td></tr><tr><td>Bottleneck in gestures, scroll, animation</td><td>Lower overhead, better startup</td></tr></table></div><p class="say">“The main difference is that the old architecture uses the Bridge, while the new one uses JSI with TurboModules and Fabric, removing the Bridge and improving performance, startup and responsiveness.”</p><p>If asked “Have you used it?” say what is true: you handled React Native upgrades at IndiGo, checked third-party library compatibility and verified features after migration.</p>`],
-["How do you build a native module?",`<p><b>TS Spec → Codegen → TurboModule → Kotlin/Swift → Native API → Promise/Event → JS</b></p><ol><li>Define the JS API as a TypeScript TurboModule spec.</li><li>Codegen generates native interfaces.</li><li>Implement in Kotlin (Android) and Swift/Objective-C (iOS).</li><li>Register the module. JS calls it through <code>TurboModuleRegistry</code>.</li><li>Async results return as Promises; continuous updates as events.</li></ol><p>You built a custom native library for scoped storage at Vcraft, so mention it.</p>`],
-["What is Metro?",`<p>Metro is React Native’s default JS bundler. It resolves imports from the entry file, transforms JS/TS, processes assets, builds the dependency graph and outputs one bundle that the app loads. In release builds the bundle is precompiled to Hermes bytecode.</p>`],
-["Hermes, JSI and the JS engine",`<p>Hermes is the default engine: bytecode precompiled at build time, so faster startup and lower memory. JSI is the C++ layer that lets JS hold direct references to native objects.</p>`],
-["Module Federation in React Native (your IndiGo work)",`<ul><li>Shell app loads mini apps at runtime; each mini app is built and deployed independently.</li><li>Shared dependencies (react, react-native, navigation) must be singletons with compatible versions.</li><li>Handle a mini app failing to load with a fallback screen.</li><li>Test contract between shell and mini apps; version it.</li></ul>`]]},
-
-{id:"native",n:"Android & iOS",lead:"Platform questions in your notes.",q:[
-["AndroidManifest.xml",`<p>Android reads it before launching. It declares package name, app name and icon, Activities, Services, Receivers, Providers, permissions, launcher activity, deep-link intent filters. Min and target SDK usually live in Gradle.</p>`],
-["AppDelegate (iOS)",`<p>iOS entry point. Receives lifecycle events: launch, active, background, push registration, deep links, background tasks. In React Native it starts the React Native app (or via SceneDelegate on newer iOS).</p>`],
-["Lifecycles",`<p><b>Android Activity:</b> onCreate → onStart → onResume (visible, interactive) → onPause → onStop → onDestroy. Returning from background: onRestart → onStart → onResume.</p><p><b>iOS:</b> Not Running → Inactive → Active → Background → Suspended. Hooks: didFinishLaunching, didBecomeActive, willResignActive, didEnterBackground, willEnterForeground, willTerminate.</p><p>In RN use <code>AppState</code> to react to foreground and background.</p>`],
-["Activity vs Fragment",`<p>An Activity is a full screen and can exist alone. A Fragment is a reusable part of a screen hosted inside an Activity, with its own lifecycle tied to the host. Key detail: <code>onDestroyView()</code> destroys the Fragment’s view while the Fragment object may live on. RN comparison: Activity ≈ native screen; Fragment ≈ reusable UI piece.</p>`],
-["Gradle",`<p>Android’s build tool: dependencies, compile, APK/AAB output, build variants (debug, release), flavors, signing. Commands: <code>./gradlew clean</code>, <code>assembleDebug</code>, <code>assembleRelease</code>, <code>bundleRelease</code>, <code>installDebug</code>.</p>`],
-["CocoaPods, Podfile, Podfile.lock",`<ul><li>CocoaPods is iOS’s dependency manager (npm for JS, Gradle for Android).</li><li>A Pod is an iOS library such as Firebase or React-Core.</li><li>Podfile lists what to install; Podfile.lock pins exact versions so everyone and CI match (like package-lock).</li><li><code>pod install</code> reads Podfile, downloads pods, builds the Pods project, writes the lock, updates the workspace.</li><li>Open <code>.xcworkspace</code>, not <code>.xcodeproj</code>.</li><li>After adding a native library: <code>cd ios && pod install</code>.</li></ul>`],
-["Service, IntentService, Data Binding",`<p>Service: background work, runs on the main thread by default. IntentService: own worker thread, stops itself, now deprecated. Use WorkManager for deferrable work, a foreground service when the user must see it. Data Binding binds XML views to a ViewModel, cutting <code>findViewById</code> boilerplate; common in MVVM.</p>`],
-["Push notifications: full flow",`<ol><li>App asks permission (required on iOS, and Android 13+).</li><li>Gets a device token from FCM (Android) or APNs (iOS, usually via FCM).</li><li>Sends token to backend; refresh it when it changes; remove on logout.</li><li>Backend sends to FCM/APNs, which deliver to the device.</li><li>Handle three states: foreground (<code>onMessage</code>, show it yourself), background, quit (read the notification that opened the app).</li></ol><p>Android needs notification channels (8+). Libraries: <code>@react-native-firebase/messaging</code> plus Notifee for display. Local notifications need no server.</p>`],
-["Deep linking",`<ul><li>Custom scheme (<code>tripare://trip/123</code>), Universal Links (iOS), App Links (Android).</li><li>React Navigation <code>linking</code> config maps URLs to screens; handle cold and warm start.</li><li>Validate scheme, host, path and params. Never trust values like <code>amount</code> in a link; the backend decides.</li><li>If logged out, save the link, login, then continue.</li><li>Test: <code>adb shell am start -a android.intent.action.VIEW -d "tripare://trip/123"</code> and <code>xcrun simctl openurl booted "tripare://trip/123"</code>.</li></ul>`]]},
-
-{id:"perf",n:"Performance",lead:"Optimisation questions with steps.",q:[
-["App is slow. What do you do, step by step?",`<ol><li>Define the symptom: slow startup, janky scroll, slow screen, memory growth.</li><li>Measure in a release build, not debug. Use React DevTools Profiler, Hermes profiler, Flipper or Perf Monitor, Android Studio Profiler, Xcode Instruments.</li><li>Find the cause: wasted re-renders, heavy JS on the main thread, big images, long lists, large bundle.</li><li>Fix one thing, re-measure, keep what helped.</li><li>Add monitoring so regressions show up.</li></ol>`],
-["Rendering and JS thread",`<ul><li><code>React.memo</code>, <code>useMemo</code>, <code>useCallback</code> where profiling shows churn.</li><li>Split state so a change does not re-render the whole tree; use selectors.</li><li>Use <code>InteractionManager</code> or defer heavy work after a transition.</li><li>Animations with Reanimated on the UI thread and <code>useNativeDriver</code>.</li><li>Remove <code>console.log</code> in production.</li></ul>`],
-["Startup time",`<ul><li>Hermes on; inline requires or lazy load screens.</li><li>Defer non-critical SDK init until after first render.</li><li>Keep splash up only until the first screen is ready.</li><li>Measure with <code>performance.timeOrigin</code> and <code>performance.now()</code>: time from JS init to first screen ready.</li></ul>`],
-["Images, bundle size, memory",`<ul><li>Right-sized images, caching library (FastImage), WebP.</li><li>Remove unused libraries; analyse the bundle; enable R8 and shrinkResources on Android.</li><li>Clean up listeners, timers and subscriptions in effect cleanup to stop leaks.</li></ul>`],
-["Inline cache, execution context, IIFE",`<p>Inline caching: the JS engine caches object property lookup info to speed repeated access. Execution context: the environment holding variables, scope and <code>this</code> while code runs. IIFE: a function that runs immediately, creating a private scope.</p>`],
-["Production monitoring architecture",`<p>App (JS errors, native crashes, performance) → Sentry or Crashlytics → stack trace, device and session context → dashboard and alerts → fix → gradual release → monitor again.</p><p class="say">“If crash rate rose in 2.5.0, I compare crash-free users with 2.4.0, group by version, OS and device, check breadcrumbs near the failing flow, fix and add a regression test, release to a small percentage, and confirm the rate drops before going to everyone.”</p>`]]},
-
-{id:"debug",n:"Debugging",lead:"Find and fix issues on Android and iOS.",q:[
-["General method, step by step",`<ol><li>Reproduce: OS version, device, debug vs release, Hermes, network.</li><li>Decide: JS error or native crash? Red screen and Metro log mean JS. App closes silently means native.</li><li>Read the right log (below).</li><li>Isolate: remove recent changes, bisect commits, test on another device.</li><li>Fix, add a test or checklist item, test both platforms.</li><li>Release gradually and watch Sentry or Crashlytics.</li></ol>`],
-["Android: debug step by step",`<ol><li>Start the bundler and device: <code>adb devices</code>, <code>npx react-native run-android</code>.</li><li>Native logs: <code>adb logcat *:E</code> or Logcat in Android Studio; filter by app package.</li><li>Crash on launch: look for <code>FATAL EXCEPTION</code> and the first “Caused by”.</li><li>Build failure: <code>cd android && ./gradlew clean</code>, then rebuild; check Gradle, JDK and SDK versions, duplicate libraries.</li><li>Release-only crash: usually R8 stripping classes; add keep rules in <code>proguard-rules.pro</code>.</li><li>Metro connection problems: <code>adb reverse tcp:8081 tcp:8081</code>.</li><li>Check manifest: permissions, exported components, cleartext traffic.</li></ol>`],
-["iOS: debug step by step",`<ol><li>Install pods after any native change: <code>cd ios && pod install</code>; open the workspace.</li><li>Run from Xcode to see the console and breakpoints; use Xcode Debug Navigator and Instruments for memory and CPU.</li><li>Crash logs: Xcode Organizer or device console; check the symbolicated stack.</li><li>Build failure: Product → Clean Build Folder; delete DerivedData; <code>pod deintegrate && pod install</code> if pods are corrupted.</li><li>Signing errors: check certificate, App ID, provisioning profile and capabilities.</li><li>Missing permission text in Info.plist makes the app crash on access (camera, location, photos).</li></ol>`],
-["JS debugging tools",`<ul><li>React Native DevTools / Hermes debugger, React DevTools, Flipper (network, layout, logs).</li><li>Reactotron or network inspector for API calls.</li><li>Sentry breadcrumbs for production.</li></ul>`],
-["Works on one platform only",`<p>Check platform differences: safe areas, keyboard behaviour, permissions, shadow vs elevation, font rendering, <code>Platform.select</code>. Then read the native log of the failing platform, not the JS log alone.</p>`],
-["Quick traps from your notes",`<ul><li><code>var a=[1,2,3]; var b=a; b.push(4); console.log(a)</code> prints <code>[1,2,3,4]</code>: arrays are references.</li><li>Loop with <code>let i</code> declared outside and <code>setTimeout</code> logging <code>i</code> prints <code>3</code> three times: one shared variable.</li><li>Normal function in an object: <code>this</code> is the object. Arrow function: <code>this</code> is inherited from outer scope (not the object).</li></ul>`]]},
-
-{id:"sec",n:"Security",lead:"Top answers from your security notes.",q:[
-["One-line answer to remember",`<p class="say">“I treat the React Native client as untrusted: protect credentials with Keychain or Keystore, use HTTPS, never ship real secrets, harden release builds, minimise sensitive data, and enforce authorization on the backend.”</p>`],
-["AsyncStorage vs Keychain/Keystore, JWT storage",`<p>AsyncStorage is plain persistent storage. Tokens go in Keychain (iOS) or Keystore (Android) via <code>react-native-keychain</code>. Use short-lived access tokens, refresh tokens with rotation and revocation, HTTPS.</p>`],
-["Can we hide API secrets in the app? Are .env files safe?",`<p>No. Anything in the APK or IPA can be extracted. <code>.env</code> is fine for config like the API URL, not for secrets. Keep real secrets on the backend.</p>`],
-["Certificate pinning, MITM, HTTPS",`<p>Pinning checks the server certificate or public key against an expected one, reducing MITM risk. It needs a rotation plan or an expired cert breaks the app. Block cleartext on Android (<code>usesCleartextTraffic="false"</code>); configure ATS on iOS.</p>`],
-["Is frontend authorization enough? Auth vs authz",`<p>No. UI checks only hide screens. Authentication is who you are; authorization is what you can do, enforced by the backend on every request.</p>`],
-["Reverse engineering, release hardening, logs",`<ul><li>R8/ProGuard with <code>minifyEnabled</code> and <code>shrinkResources</code>, no debug in release.</li><li>No tokens, passwords or personal data in logs or crash reports.</li><li>Obfuscation slows attackers; it does not stop them.</li></ul>`],
-["Biometrics, root detection, WebView, replay attacks",`<ul><li>Biometrics unlock a securely stored credential; they are not server identity.</li><li>Root or jailbreak detection is one extra signal, not the only control.</li><li>WebView: allowlist domains, limit injected JS and navigation.</li><li>Replay: short expiry, rotation, revocation, nonces or request signing.</li></ul>`]]},
-
-{id:"rel",n:"Releases",lead:"Play Store, App Store, Fastlane. A named duty of this role.",q:[
-["Android release steps",`<ol><li>Bump <code>versionCode</code> (integer, must increase) and <code>versionName</code> (shown to users).</li><li>Build a signed AAB: <code>./gradlew bundleRelease</code>.</li><li>Upload to Play Console: internal → closed → open → production.</li><li>Complete listing, content rating, Data Safety form.</li><li>Submit, then use a staged rollout (e.g. 10%) and watch crashes.</li></ol>`],
-["APK vs AAB, keystore, Play App Signing",`<p>An AAB lets Google Play build optimised APKs per device (smaller downloads). The keystore holds the signing key; with Play App Signing, Google holds the app key and you keep an upload key. Lose the upload key without that setup and you cannot update. Back it up securely.</p>`],
-["iOS release steps",`<ol><li>Create the app in App Store Connect with its bundle ID.</li><li>Certificates and provisioning profiles (or automatic signing, or Fastlane match).</li><li>Bump the build number, archive in Xcode.</li><li>Validate and upload (Organizer or Transporter), then TestFlight.</li><li>Complete metadata, screenshots, App Privacy details.</li><li>Submit for review; choose manual, scheduled or phased release.</li></ol>`],
-["Certificate, App ID, provisioning profile",`<p>Certificate identifies the developer and signs the app. App ID identifies the app and capabilities (push, App Groups). Profile ties certificate, App ID and devices together. Most signing failures come from a mismatch among these. Build types: Development, Ad Hoc, App Store, Enterprise.</p>`],
-["TestFlight, review time, common rejections",`<p>TestFlight: up to 100 internal testers (no review), up to 10,000 external (light review). Review takes hours to a couple of days. Common rejections: crashes, incomplete metadata, privacy label not matching SDK behaviour, broken privacy-policy link, excess permissions.</p>`],
-["Fastlane and CI/CD",`<ul><li><code>match</code> signing, <code>gym</code> iOS build, <code>pilot</code> TestFlight, <code>supply</code> Play upload.</li><li>One lane per environment; run from GitHub Actions or Jenkins (both on your CV).</li><li>Secrets in CI secret store, never in git.</li><li>One source of truth for version, synced to <code>versionCode/versionName</code> and <code>CFBundleVersion/ShortVersion</code>.</li></ul>`],
-["Scenario: urgent fix while review is pending",`<p>iOS: wait, or remove the build from review and submit the fixed build. Android: upload a new build to the track. Then use an expedited review request only for real emergencies.</p>`],
-["Scenario: build works locally, fails in TestFlight or Play",`<p>Check: it is a release build with correct endpoints; certificates and profiles valid, or the right keystore used; build number incremented (stores reject duplicates); entitlements and permissions present in the signed build.</p>`],
-["OTA and Remote Config (IndiGo)",`<p>OTA (RN Stallion, EAS Update) ships JS-only fixes without store review. Native changes always go through stores. Remote Config gates risky features and enables A/B tests with no release.</p>`]]},
-
-{id:"ts",n:"TS & JS",lead:"TypeScript clarity plus coding rounds.",q:[
-["type vs interface, any vs unknown, generics",`<pre>function first&lt;T&gt;(a: T[]): T | undefined { return a[0]; }
-type Booking = { id: string; city: string; price: number };
-type Preview = Pick&lt;Booking, "id" | "city"&gt;;</pre><ul><li>Interface extends and merges; type handles unions and mapped types.</li><li><code>unknown</code> forces narrowing; <code>any</code> disables checks.</li><li>Know Partial, Pick, Omit, Record, ReturnType; narrowing via typeof, in, discriminated unions.</li><li>Types vanish at runtime; validate API data with Zod for critical flows.</li><li>Type navigation with a param list so <code>navigate("Trip", { id })</code> is checked.</li></ul>`],
-["Coding questions in your notes",`<pre>// second largest
-const second = a =&gt; { let m = -Infinity, s = -Infinity;
-  for (const n of a) { if (n &gt; m) { s = m; m = n; } else if (n &lt; m &amp;&amp; n &gt; s) s = n; }
-  return s; };
-// reverse string
-const rev = s =&gt; { let r = ""; for (let i = s.length - 1; i &gt;= 0; i--) r += s[i]; return r; };
-// palindrome
-const pal = s =&gt; { let i = 0, j = s.length - 1;
-  while (i &lt; j) if (s[i++] !== s[j--]) return false; return true; };
-// duplicates
-const dup = a =&gt; { const seen = new Set(), d = new Set();
-  a.forEach(x =&gt; seen.has(x) ? d.add(x) : seen.add(x)); return [...d]; };</pre>`],
-["Generator, HOC, class lifecycle, CSS",`<ul><li>Generator: <code>function*</code> that pauses at <code>yield</code> and resumes; Saga uses them.</li><li>Class lifecycle: mounting (constructor, render, componentDidMount), updating (shouldComponentUpdate, componentDidUpdate), unmounting (componentWillUnmount).</li><li>Flex vs Grid: flex is one dimension, grid is two. CSS positions: static, relative, absolute, fixed, sticky.</li></ul>`]]},
-
-{id:"ask",n:"Ask them",lead:"Pick three or four.",q:[
-["Questions for Tripare",`<ul><li>What does a release cycle look like, and how much is automated?</li><li>Which React Native and Expo versions are you on? Is the New Architecture enabled?</li><li>How are push notifications and deep links used in the travel flow?</li><li>How do product, design and backend hand requirements to mobile?</li><li>What would success look like in the first 90 days?</li><li>How do you monitor crashes and roll back after a release?</li></ul>`],
-["Day-before checklist",`<ul><li>Rehearse intro and gap answer aloud.</li><li>Prepare one real release story and one performance story.</li><li>Revise push, deep link, Fastlane and signing flows.</li><li>Test mic, camera and internet; keep your CV open.</li></ul>`]]}
-];
-var f=document.getElementById('f'),m=document.getElementById('m');
-S.forEach(function(s,i){
- var b=document.createElement('button');b.textContent=s.n;b.setAttribute('aria-pressed',i===0);b.onclick=function(){show(s.id)};f.appendChild(b);
- var e=document.createElement('section');e.id=s.id;
- e.innerHTML='<h2>'+s.n+'</h2><p class="lead">'+s.lead+'</p><div class="t"><button class="o">Open all</button><button class="c">Close all</button></div>'+s.q.map(function(x){return '<details><summary>'+x[0]+'</summary><div class="a">'+x[1]+'</div></details>'}).join('');
- e.querySelector('.o').onclick=function(){e.querySelectorAll('details').forEach(function(d){d.open=true})};
- e.querySelector('.c').onclick=function(){e.querySelectorAll('details').forEach(function(d){d.open=false})};
- m.appendChild(e);
-});
-function show(id){
- S.forEach(function(s,i){f.children[i].setAttribute('aria-pressed',s.id===id);document.getElementById(s.id).classList.toggle('hide',s.id!==id)});
- window.scrollTo(0,0);try{history.replaceState(null,'','#'+id)}catch(e){}
 }
-show((location.hash||'#pitch').slice(1)||'pitch');
-if(!document.getElementById(location.hash.slice(1)))show('pitch');
-</script></body></html>
+</script>
+
+<script type="text/plain" data-cat="Hooks" data-title="Custom hook: useDebounce + search box" data-note="Classic. Cleanup clears the timer on every change.">
+function useDebounce(value, delay = 400) {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const id = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(id);
+  }, [value, delay]);
+  return debounced;
+}
+
+function Search() {
+  const [term, setTerm] = useState('');
+  const debounced = useDebounce(term);
+  useEffect(() => {
+    if (debounced) console.log('call API with', debounced);
+  }, [debounced]);
+  return <input value={term} onChange={e => setTerm(e.target.value)} />;
+}
+</script>
+
+<script type="text/plain" data-cat="Hooks" data-title="Custom hooks: useToggle, usePrevious, useLocalStorage" data-note="Shows you can extract reusable logic.">
+const useToggle = (init = false) => {
+  const [on, setOn] = useState(init);
+  const toggle = useCallback(() => setOn(v => !v), []);
+  return [on, toggle];
+};
+
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => { ref.current = value; }, [value]);
+  return ref.current;
+}
+
+function useLocalStorage(key, initial) {
+  const [val, setVal] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(key)) ?? initial; }
+    catch { return initial; }
+  });
+  useEffect(() => { localStorage.setItem(key, JSON.stringify(val)); }, [key, val]);
+  return [val, setVal];
+}
+</script>
+
+<script type="text/plain" data-cat="REST" data-title="Fetch data with loading, error and abort" data-note="Expect this one. Handle the three states and cancel on unmount.">
+function useFetch(url) {
+  const [state, setState] = useState({ data: null, loading: true, error: null });
+  useEffect(() => {
+    const ctrl = new AbortController();
+    setState({ data: null, loading: true, error: null });
+    fetch(url, { signal: ctrl.signal })
+      .then(res => {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(data => setState({ data, loading: false, error: null }))
+      .catch(err => {
+        if (err.name !== 'AbortError')
+          setState({ data: null, loading: false, error: err.message });
+      });
+    return () => ctrl.abort();
+  }, [url]);
+  return state;
+}
+
+function Users() {
+  const { data, loading, error } = useFetch('https://jsonplaceholder.typicode.com/users');
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  return <ul>{data.map(u => <li key={u.id}>{u.name}</li>)}</ul>;
+}
+</script>
+
+<script type="text/plain" data-cat="REST" data-title="Full example: call an API and build a list (GET, POST, DELETE, search)" data-note="Most likely live task. Loading and error states, optimistic delete, derived search.">
+const API = 'https://jsonplaceholder.typicode.com/posts';
+
+function PostsList() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [query, setQuery] = useState('');
+  const [title, setTitle] = useState('');
+
+  // 1. GET on mount
+  useEffect(() => {
+    const ctrl = new AbortController();
+    async function load() {
+      try {
+        setLoading(true);
+        const res = await fetch(API + '?_limit=10', { signal: ctrl.signal });
+        if (!res.ok) throw new Error('Request failed: ' + res.status);
+        setPosts(await res.json());
+        setError(null);
+      } catch (err) {
+        if (err.name !== 'AbortError') setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+    return () => ctrl.abort();
+  }, []);
+
+  // 2. POST: create an item
+  async function addPost(e) {
+    e.preventDefault();
+    if (!title.trim()) return;
+    try {
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, body: 'demo', userId: 1 }),
+      });
+      if (!res.ok) throw new Error('Could not create post');
+      const created = await res.json();
+      // fake API always returns id 101, so use a unique local id
+      setPosts(prev => [{ ...created, id: Date.now() }, ...prev]);
+      setTitle('');
+    } catch (err) { setError(err.message); }
+  }
+
+  // 3. DELETE: optimistic update with rollback
+  async function removePost(id) {
+    const snapshot = posts;
+    setPosts(prev => prev.filter(p => p.id !== id));
+    try {
+      const res = await fetch(API + '/' + id, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Delete failed');
+    } catch (err) {
+      setPosts(snapshot);
+      setError(err.message);
+    }
+  }
+
+  // 4. Derived data, no second copy in state
+  const visible = useMemo(
+    () => posts.filter(p => p.title.toLowerCase().includes(query.toLowerCase())),
+    [posts, query]
+  );
+
+  if (loading) return <p>Loading...</p>;
+
+  return (
+    <div>
+      <h2>Posts</h2>
+      {error && <p role="alert">{error}</p>}
+
+      <form onSubmit={addPost}>
+        <input value={title} onChange={e => setTitle(e.target.value)} placeholder="New post title" />
+        <button type="submit">Add</button>
+      </form>
+
+      <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search posts" />
+
+      {visible.length === 0 ? (
+        <p>No posts found.</p>
+      ) : (
+        <ul>
+          {visible.map(post => (
+            <li key={post.id}>
+              <span>{post.title}</span>
+              <button onClick={() => removePost(post.id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+</script>
+
+<script type="text/plain" data-cat="REST" data-title="Axios service layer + reusable list (PUT edit, PATCH toggle)" data-note="Cleaner structure: API calls live in one file, the component only handles UI.">
+// services/postsApi.js
+import axios from 'axios';
+
+const http = axios.create({ baseURL: 'https://jsonplaceholder.typicode.com', timeout: 8000 });
+
+export const postsApi = {
+  list:   (params, signal) => http.get('/posts', { params, signal }).then(r => r.data),
+  get:    id => http.get('/posts/' + id).then(r => r.data),
+  create: payload => http.post('/posts', payload).then(r => r.data),
+  update: (id, payload) => http.put('/posts/' + id, payload).then(r => r.data),   // replace whole item
+  patch:  (id, payload) => http.patch('/posts/' + id, payload).then(r => r.data), // partial update
+  remove: id => http.delete('/posts/' + id),
+};
+
+// Generic list component, reusable for any data
+function ItemList({ items, renderItem, emptyText = 'Nothing here yet.' }) {
+  if (!items.length) return <p>{emptyText}</p>;
+  return <ul>{items.map(it => <li key={it.id}>{renderItem(it)}</li>)}</ul>;
+}
+
+// Usage
+function Posts() {
+  const [posts, setPosts] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [draft, setDraft] = useState('');
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+    postsApi.list({ _limit: 8 }, ctrl.signal)
+      .then(setPosts)
+      .catch(err => { if (!axios.isCancel(err)) console.error(err); });
+    return () => ctrl.abort();
+  }, []);
+
+  async function save(id) {
+    const updated = await postsApi.patch(id, { title: draft });
+    setPosts(prev => prev.map(p => p.id === id ? { ...p, ...updated } : p));
+    setEditingId(null);
+  }
+
+  return (
+    <ItemList
+      items={posts}
+      renderItem={p => editingId === p.id ? (
+        <>
+          <input value={draft} onChange={e => setDraft(e.target.value)} />
+          <button onClick={() => save(p.id)}>Save</button>
+          <button onClick={() => setEditingId(null)}>Cancel</button>
+        </>
+      ) : (
+        <>
+          {p.title}
+          <button onClick={() => { setEditingId(p.id); setDraft(p.title); }}>Edit</button>
+        </>
+      )}
+    />
+  );
+}
+</script>
+
+<script type="text/plain" data-cat="REST" data-title="Plain JS version: fetch and render a list with the DOM" data-note="If they ask for no framework. Use textContent, not innerHTML, for API data.">
+const list = document.querySelector('#list');
+
+async function loadPosts() {
+  list.textContent = 'Loading...';
+  try {
+    const res = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=5');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const posts = await res.json();
+
+    list.textContent = '';
+    const frag = document.createDocumentFragment();  // one DOM write
+    posts.forEach(p => {
+      const li = document.createElement('li');
+      li.dataset.id = p.id;
+      li.textContent = p.title;                      // safe against XSS
+      frag.append(li);
+    });
+    list.append(frag);
+  } catch (err) {
+    list.textContent = 'Error: ' + err.message;
+  }
+}
+
+// Event delegation: one listener for all items
+list.addEventListener('click', e => {
+  const li = e.target.closest('li');
+  if (li) console.log('clicked post', li.dataset.id);
+});
+
+loadPosts();
+</script>
+
+<script type="text/plain" data-cat="REST" data-title="Pagination with Previous / Next buttons (5 or 10 per page, server-side)" data-note="Set ITEMS_PER_PAGE to 5 or 10 in code. JSONPlaceholder supports _page and _limit, and returns the total in the x-total-count header.">
+const API = 'https://jsonplaceholder.typicode.com/posts';
+const ITEMS_PER_PAGE = 5;   // change this to 10 to show 10 items per page
+
+function PaginatedPosts() {
+  const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+
+  // Re-fetch whenever the page changes
+  useEffect(() => {
+    const ctrl = new AbortController();
+
+    async function load() {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await fetch(API + '?_page=' + page + '&_limit=' + ITEMS_PER_PAGE, { signal: ctrl.signal });
+        if (!res.ok) throw new Error('Request failed: ' + res.status);
+        setTotal(Number(res.headers.get('x-total-count')) || 0);
+        setPosts(await res.json());
+      } catch (err) {
+        if (err.name !== 'AbortError') setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    load();
+    return () => ctrl.abort();   // avoids showing data from an older page
+  }, [page]);
+
+  return (
+    <div>
+      <h2>Posts</h2>
+
+      {error && <p role="alert">{error}</p>}
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul>
+          {posts.map(p => <li key={p.id}>{p.id}. {p.title}</li>)}
+        </ul>
+      )}
+
+      <div>
+        <button onClick={() => setPage(p => p - 1)} disabled={page === 1 || loading}>
+          Previous
+        </button>
+        <span> Page {page} of {totalPages || 1} </span>
+        <button onClick={() => setPage(p => p + 1)} disabled={page >= totalPages || loading}>
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+</script>
+
+<script type="text/plain" data-cat="REST" data-title="Pagination, client-side: fetch once, slice per page, numbered buttons" data-note="Use when the API has no paging. One request, slice in memory. Set ITEMS_PER_PAGE to 5 or 10.">
+const ITEMS_PER_PAGE = 5;   // change this to 10 to show 10 items per page
+
+function usePagination(items, size = ITEMS_PER_PAGE) {
+  const [page, setPage] = useState(1);
+
+  const totalPages = Math.max(1, Math.ceil(items.length / size));
+  const safePage = Math.min(page, totalPages);   // if the list shrinks
+  const start = (safePage - 1) * size;
+  const pageItems = items.slice(start, start + size);
+
+  return {
+    pageItems,
+    page: safePage,
+    totalPages,
+    next: () => setPage(p => Math.min(p + 1, totalPages)),
+    prev: () => setPage(p => Math.max(p - 1, 1)),
+    goTo: n => setPage(n),
+  };
+}
+
+function ClientPaginatedPosts() {
+  const [posts, setPosts] = useState([]);
+
+  // fetch all 100 posts once
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then(r => r.json())
+      .then(setPosts);
+  }, []);
+
+  const { pageItems, page, totalPages, next, prev, goTo } = usePagination(posts);
+
+  return (
+    <>
+      <ul>{pageItems.map(p => <li key={p.id}>{p.title}</li>)}</ul>
+
+      <button onClick={prev} disabled={page === 1}>Previous</button>
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map(n => (
+        <button key={n} onClick={() => goTo(n)} disabled={n === page}>{n}</button>
+      ))}
+      <button onClick={next} disabled={page === totalPages}>Next</button>
+    </>
+  );
+}
+// With 100 posts: 5 per page = 20 pages, 10 per page = 10 pages.
+// In a real app show a window: first, last, and current +/- 2 with "..."
+</script>
+
+<script type="text/plain" data-cat="REST" data-title="Pagination and infinite scroll" data-note="IntersectionObserver beats scroll listeners.">
+function Feed() {
+  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const sentinel = useRef(null);
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/posts?_limit=10&_page=' + page)
+      .then(r => r.json())
+      .then(rows => {
+        setItems(prev => [...prev, ...rows]);
+        if (rows.length < 10) setHasMore(false);
+      });
+  }, [page]);
+
+  useEffect(() => {
+    if (!hasMore) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) setPage(p => p + 1);
+    });
+    if (sentinel.current) io.observe(sentinel.current);
+    return () => io.disconnect();
+  }, [hasMore]);
+
+  return (
+    <>
+      {items.map(p => <p key={p.id}>{p.title}</p>)}
+      <div ref={sentinel} />
+    </>
+  );
+}
+</script>
+
+<script type="text/plain" data-cat="Forms" data-title="Controlled form with validation" data-note="One state object, one handler, errors derived on submit.">
+function SignUp() {
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({});
+
+  const onChange = e =>
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+
+  const validate = () => {
+    const err = {};
+    if (!/^\S+@\S+\.\S+$/.test(form.email)) err.email = 'Enter a valid email';
+    if (form.password.length < 8) err.password = 'Minimum 8 characters';
+    return err;
+  };
+
+  const onSubmit = e => {
+    e.preventDefault();
+    const err = validate();
+    setErrors(err);
+    if (Object.keys(err).length === 0) console.log('submit', form);
+  };
+
+  return (
+    <form onSubmit={onSubmit} noValidate>
+      <input name="email" value={form.email} onChange={onChange} />
+      {errors.email && <small>{errors.email}</small>}
+      <input name="password" type="password" value={form.password} onChange={onChange} />
+      {errors.password && <small>{errors.password}</small>}
+      <button>Create account</button>
+    </form>
+  );
+}
+</script>
+
+<script type="text/plain" data-cat="UI" data-title="Accordion, tabs and modal" data-note="Small UI widgets. Mention keyboard and aria attributes.">
+function Accordion({ items }) {
+  const [open, setOpen] = useState(null);
+  return items.map((it, i) => (
+    <div key={i}>
+      <button aria-expanded={open === i} onClick={() => setOpen(open === i ? null : i)}>
+        {it.title}
+      </button>
+      {open === i && <p>{it.body}</p>}
+    </div>
+  ));
+}
+
+function Tabs({ tabs }) {
+  const [active, setActive] = useState(0);
+  return (
+    <>
+      <div role="tablist">
+        {tabs.map((t, i) => (
+          <button key={t.label} role="tab" aria-selected={i === active}
+                  onClick={() => setActive(i)}>{t.label}</button>
+        ))}
+      </div>
+      <div role="tabpanel">{tabs[active].content}</div>
+    </>
+  );
+}
+
+function Modal({ open, onClose, children }) {
+  useEffect(() => {
+    const onKey = e => e.key === 'Escape' && onClose();
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
+  if (!open) return null;
+  return createPortal(
+    <div className="backdrop" onClick={onClose}>
+      <div className="box" onClick={e => e.stopPropagation()}>{children}</div>
+    </div>,
+    document.body
+  );
+}
+</script>
+
+<script type="text/plain" data-cat="UI" data-title="Star rating, progress bar, stopwatch" data-note="Frequent short tasks. Watch interval cleanup.">
+function StarRating({ max = 5 }) {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  return [...Array(max)].map((_, i) => {
+    const n = i + 1;
+    return (
+      <span key={n} style={{ cursor: 'pointer', color: n <= (hover || rating) ? 'gold' : '#888' }}
+            onClick={() => setRating(n)}
+            onMouseEnter={() => setHover(n)}
+            onMouseLeave={() => setHover(0)}>*</span>
+    );
+  });
+}
+
+function Stopwatch() {
+  const [ms, setMs] = useState(0);
+  const [running, setRunning] = useState(false);
+  useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => setMs(t => t + 10), 10);
+    return () => clearInterval(id);
+  }, [running]);
+  return (
+    <>
+      <h2>{(ms / 1000).toFixed(2)}s</h2>
+      <button onClick={() => setRunning(r => !r)}>{running ? 'Pause' : 'Start'}</button>
+      <button onClick={() => { setRunning(false); setMs(0); }}>Reset</button>
+    </>
+  );
+}
+</script>
+
+<script type="text/plain" data-cat="State" data-title="useReducer + Context (cart or theme)" data-note="Good answer to 'how do you avoid prop drilling without Redux?'">
+const CartContext = createContext(null);
+
+function cartReducer(state, action) {
+  switch (action.type) {
+    case 'add': {
+      const found = state.find(i => i.id === action.item.id);
+      return found
+        ? state.map(i => i.id === found.id ? { ...i, qty: i.qty + 1 } : i)
+        : [...state, { ...action.item, qty: 1 }];
+    }
+    case 'remove': return state.filter(i => i.id !== action.id);
+    case 'clear': return [];
+    default: throw new Error('Unknown action ' + action.type);
+  }
+}
+
+function CartProvider({ children }) {
+  const [cart, dispatch] = useReducer(cartReducer, []);
+  const value = useMemo(() => ({ cart, dispatch }), [cart]);
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+}
+
+const useCart = () => {
+  const ctx = useContext(CartContext);
+  if (!ctx) throw new Error('useCart must be inside CartProvider');
+  return ctx;
+};
+</script>
+
+<script type="text/plain" data-cat="State" data-title="Redux Toolkit: slice, store, async thunk" data-note="JD names Redux and Flux. Know actions, reducers, store, unidirectional flow.">
+// store/usersSlice.js
+import { createSlice, createAsyncThunk, configureStore } from '@reduxjs/toolkit';
+
+export const fetchUsers = createAsyncThunk('users/fetch', async (_, { rejectWithValue }) => {
+  try {
+    const res = await fetch('/api/users');
+    if (!res.ok) throw new Error('Failed');
+    return await res.json();
+  } catch (e) { return rejectWithValue(e.message); }
+});
+
+const usersSlice = createSlice({
+  name: 'users',
+  initialState: { list: [], status: 'idle', error: null },
+  reducers: {
+    removeUser: (state, action) => {           // Immer lets you "mutate"
+      state.list = state.list.filter(u => u.id !== action.payload);
+    },
+  },
+  extraReducers: builder => builder
+    .addCase(fetchUsers.pending,   s => { s.status = 'loading'; })
+    .addCase(fetchUsers.fulfilled, (s, a) => { s.status = 'ok'; s.list = a.payload; })
+    .addCase(fetchUsers.rejected,  (s, a) => { s.status = 'error'; s.error = a.payload; }),
+});
+
+export const { removeUser } = usersSlice.actions;
+export const store = configureStore({ reducer: { users: usersSlice.reducer } });
+
+// component
+function UserList() {
+  const dispatch = useDispatch();
+  const { list, status } = useSelector(s => s.users);
+  useEffect(() => { dispatch(fetchUsers()); }, [dispatch]);
+  if (status === 'loading') return <p>Loading...</p>;
+  return list.map(u => <div key={u.id}>{u.name}
+    <button onClick={() => dispatch(removeUser(u.id))}>x</button></div>);
+}
+
+// Flux in one line: View -> Action -> Dispatcher -> Store -> View
+</script>
+
+<script type="text/plain" data-cat="Auth" data-title="JWT: login, axios interceptor, protected route" data-note="Cover access vs refresh token, where to store them, and XSS vs CSRF.">
+// api.js: attach token, refresh once on 401
+import axios from 'axios';
+const api = axios.create({ baseURL: '/api' });
+
+api.interceptors.request.use(cfg => {
+  const token = localStorage.getItem('accessToken');
+  if (token) cfg.headers.Authorization = 'Bearer ' + token;
+  return cfg;
+});
+
+api.interceptors.response.use(
+  res => res,
+  async err => {
+    const original = err.config;
+    if (err.response?.status === 401 && !original._retry) {
+      original._retry = true;
+      const { data } = await axios.post('/api/auth/refresh', null, { withCredentials: true });
+      localStorage.setItem('accessToken', data.accessToken);
+      original.headers.Authorization = 'Bearer ' + data.accessToken;
+      return api(original);
+    }
+    return Promise.reject(err);
+  }
+);
+
+// AuthContext + protected route
+const AuthContext = createContext(null);
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const login = async (email, password) => {
+    const { data } = await api.post('/auth/login', { email, password });
+    localStorage.setItem('accessToken', data.accessToken);
+    setUser(data.user);
+  };
+  const logout = () => { localStorage.removeItem('accessToken'); setUser(null); };
+  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+}
+
+function ProtectedRoute({ children }) {
+  const { user } = useContext(AuthContext);
+  const location = useLocation();
+  return user ? children : <Navigate to="/login" state={{ from: location }} replace />;
+}
+
+// Decode the payload (display only, never trust it for security)
+const parseJwt = t => JSON.parse(atob(t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+</script>
+
+<script type="text/plain" data-cat="Performance" data-title="memo, useMemo, useCallback, lazy, virtual list" data-note="Say when NOT to use them: measure with React Profiler first.">
+// 1. Skip re-render when props are unchanged
+const Row = React.memo(function Row({ item, onSelect }) {
+  return <li onClick={() => onSelect(item.id)}>{item.name}</li>;
+});
+
+function List({ items }) {
+  const [query, setQuery] = useState('');
+  // 2. Cache expensive derived data
+  const filtered = useMemo(
+    () => items.filter(i => i.name.toLowerCase().includes(query.toLowerCase())),
+    [items, query]
+  );
+  // 3. Stable function identity so memo(Row) works
+  const onSelect = useCallback(id => console.log(id), []);
+  return (
+    <>
+      <input value={query} onChange={e => setQuery(e.target.value)} />
+      <ul>{filtered.map(i => <Row key={i.id} item={i} onSelect={onSelect} />)}</ul>
+    </>
+  );
+}
+
+// 4. Code splitting
+const Dashboard = lazy(() => import('./Dashboard'));
+<Suspense fallback={<p>Loading...</p>}><Dashboard /></Suspense>
+
+// 5. Windowing: render only visible rows (fixed height)
+function VirtualList({ items, height = 400, rowH = 32 }) {
+  const [top, setTop] = useState(0);
+  const start = Math.floor(top / rowH);
+  const count = Math.ceil(height / rowH) + 2;
+  return (
+    <div style={{ height, overflow: 'auto' }} onScroll={e => setTop(e.currentTarget.scrollTop)}>
+      <div style={{ height: items.length * rowH, position: 'relative' }}>
+        {items.slice(start, start + count).map((it, i) => (
+          <div key={it.id} style={{ position: 'absolute', top: (start + i) * rowH, height: rowH }}>
+            {it.name}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+</script>
+
+<script type="text/plain" data-cat="Performance" data-title="Error boundary and measuring render time" data-note="Boundaries must be class components. Profiler API gives timings.">
+class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+  static getDerivedStateFromError() { return { hasError: true }; }
+  componentDidCatch(error, info) { console.error(error, info.componentStack); }
+  render() {
+    return this.state.hasError ? <h2>Something went wrong.</h2> : this.props.children;
+  }
+}
+
+<Profiler id="List" onRender={(id, phase, actualMs) => console.log(id, phase, actualMs)}>
+  <List items={items} />
+</Profiler>
+
+// Plain JS benchmarking
+console.time('work'); heavy(); console.timeEnd('work');
+const t0 = performance.now(); heavy(); console.log(performance.now() - t0);
+</script>
+
+<script type="text/plain" data-cat="TypeScript" data-title="Typed props, generics, hooks and reducer" data-note="Prefer union types and generics over any.">
+type Todo = { id: number; text: string; done: boolean };
+
+type ButtonProps = {
+  label: string;
+  variant?: 'primary' | 'ghost';
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+};
+const Button = ({ label, variant = 'primary', onClick }: ButtonProps) =>
+  <button className={variant} onClick={onClick}>{label}</button>;
+
+// Generic list component
+type ListProps<T> = { items: T[]; render: (item: T) => React.ReactNode };
+function List<T extends { id: number }>({ items, render }: ListProps<T>) {
+  return <ul>{items.map(i => <li key={i.id}>{render(i)}</li>)}</ul>;
+}
+
+// Typed state and event
+const [todos, setTodos] = useState<Todo[]>([]);
+const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.target.value);
+
+// Discriminated union for reducer actions
+type Action = { type: 'add'; text: string } | { type: 'toggle'; id: number };
+function reducer(state: Todo[], action: Action): Todo[] {
+  switch (action.type) {
+    case 'add': return [...state, { id: Date.now(), text: action.text, done: false }];
+    case 'toggle': return state.map(t => t.id === action.id ? { ...t, done: !t.done } : t);
+  }
+}
+
+// Typed fetch hook
+async function getJson<T>(url: string): Promise<T> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(res.statusText);
+  return res.json() as Promise<T>;
+}
+</script>
+
+<script type="text/plain" data-cat="JavaScript" data-title="debounce, throttle, once, memoize" data-note="Almost guaranteed in a JS round.">
+function debounce(fn, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+function throttle(fn, limit) {
+  let waiting = false;
+  return function (...args) {
+    if (waiting) return;
+    fn.apply(this, args);
+    waiting = true;
+    setTimeout(() => (waiting = false), limit);
+  };
+}
+
+const once = fn => { let done = false, r; return (...a) => done ? r : (done = true, r = fn(...a)); };
+
+function memoize(fn) {
+  const cache = new Map();
+  return (...args) => {
+    const key = JSON.stringify(args);
+    if (!cache.has(key)) cache.set(key, fn(...args));
+    return cache.get(key);
+  };
+}
+</script>
+
+<script type="text/plain" data-cat="JavaScript" data-title="Polyfills: bind, map, reduce, Promise.all, call" data-note="Know the semantics, not just the code.">
+Function.prototype.myBind = function (ctx, ...bound) {
+  const fn = this;
+  return function (...args) { return fn.apply(ctx, [...bound, ...args]); };
+};
+
+Array.prototype.myMap = function (cb, thisArg) {
+  const out = [];
+  for (let i = 0; i < this.length; i++)
+    if (i in this) out[i] = cb.call(thisArg, this[i], i, this);
+  return out;
+};
+
+Array.prototype.myReduce = function (cb, init) {
+  let acc = init, i = 0;
+  if (arguments.length < 2) { acc = this[0]; i = 1; }
+  for (; i < this.length; i++) acc = cb(acc, this[i], i, this);
+  return acc;
+};
+
+Promise.myAll = promises => new Promise((resolve, reject) => {
+  const results = []; let done = 0;
+  if (!promises.length) return resolve([]);
+  promises.forEach((p, i) =>
+    Promise.resolve(p).then(v => {
+      results[i] = v;
+      if (++done === promises.length) resolve(results);
+    }, reject));
+});
+</script>
+
+<script type="text/plain" data-cat="JavaScript" data-title="Flatten, deep clone, group by, curry, compose" data-note="Data manipulation warm-ups.">
+const flatten = (arr, depth = Infinity) =>
+  depth > 0 ? arr.reduce((a, x) => a.concat(Array.isArray(x) ? flatten(x, depth - 1) : x), []) : arr.slice();
+
+function deepClone(obj, seen = new WeakMap()) {
+  if (obj === null || typeof obj !== 'object') return obj;
+  if (seen.has(obj)) return seen.get(obj);          // circular refs
+  if (obj instanceof Date) return new Date(obj);
+  const copy = Array.isArray(obj) ? [] : {};
+  seen.set(obj, copy);
+  for (const k of Object.keys(obj)) copy[k] = deepClone(obj[k], seen);
+  return copy;
+}
+// structuredClone(obj) is the built-in alternative
+
+const groupBy = (arr, key) =>
+  arr.reduce((acc, x) => ((acc[x[key]] ||= []).push(x), acc), {});
+
+const curry = fn => function c(...a) {
+  return a.length >= fn.length ? fn(...a) : (...b) => c(...a, ...b);
+};
+
+const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x);
+
+// Unique + count occurrences
+const count = arr => arr.reduce((m, x) => (m[x] = (m[x] || 0) + 1, m), {});
+const unique = arr => [...new Set(arr)];
+</script>
+
+<script type="text/plain" data-cat="JavaScript" data-title="Closures, event loop, this, hoisting (output questions)" data-note="Predict the output, then explain microtasks vs macrotasks.">
+// 1. var vs let in loops
+for (var i = 0; i < 3; i++) setTimeout(() => console.log(i));   // 3 3 3
+for (let j = 0; j < 3; j++) setTimeout(() => console.log(j));   // 0 1 2
+
+// 2. Event loop order
+console.log('1');
+setTimeout(() => console.log('2'), 0);
+Promise.resolve().then(() => console.log('3'));
+console.log('4');
+// 1 4 3 2   (sync, microtask, macrotask)
+
+// 3. this
+const o = { n: 'a', arrow: () => this.n, normal() { return this.n; } };
+o.normal();           // 'a'
+const f = o.normal; f();   // undefined (lost this)
+
+// 4. Hoisting / TDZ
+console.log(a); var a = 1;   // undefined
+console.log(b); let b = 2;   // ReferenceError
+
+// 5. Counter via closure
+function makeCounter() { let c = 0; return { inc: () => ++c, get: () => c }; }
+
+// 6. Event delegation
+document.querySelector('ul').addEventListener('click', e => {
+  const li = e.target.closest('li');
+  if (li) console.log(li.dataset.id);
+});
+</script>
+
+<script type="text/plain" data-cat="JavaScript" data-title="DOM manipulation and async patterns" data-note="JD asks for DOM and object model strength.">
+// Create and append
+const el = document.createElement('div');
+el.className = 'card';
+el.textContent = 'Hello';
+document.body.append(el);
+
+// Classes, attributes, dataset, observers
+el.classList.toggle('active');
+el.setAttribute('aria-label', 'card');
+const io = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting && console.log('visible')));
+io.observe(el);
+
+// Async: sequential, parallel, retry
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function retry(fn, tries = 3, delay = 300) {
+  for (let i = 0; i < tries; i++) {
+    try { return await fn(); }
+    catch (e) { if (i === tries - 1) throw e; await sleep(delay * 2 ** i); }
+  }
+}
+const [users, posts] = await Promise.all([
+  fetch('/api/users').then(r => r.json()),
+  fetch('/api/posts').then(r => r.json()),
+]);
+const settled = await Promise.allSettled([fetch('/a'), fetch('/b')]);
+
+// Object model: prototypes, getters, freezing
+function Person(n) { this.n = n; }
+Person.prototype.hi = function () { return 'hi ' + this.n; };
+const frozen = Object.freeze({ a: 1 });
+const { a, ...rest } = { a: 1, b: 2, c: 3 };
+</script>
+
+<script type="text/plain" data-cat="Algorithms" data-title="Common DSA warm-ups in JS" data-note="Often asked as a quick follow-up.">
+const reverse = s => [...s].reverse().join('');
+const isPalindrome = s => { const c = s.toLowerCase().replace(/[^a-z0-9]/g, ''); return c === [...c].reverse().join(''); };
+
+function twoSum(nums, target) {
+  const seen = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    const need = target - nums[i];
+    if (seen.has(need)) return [seen.get(need), i];
+    seen.set(nums[i], i);
+  }
+}
+
+const isAnagram = (a, b) => [...a].sort().join('') === [...b].sort().join('');
+
+function fizzBuzz(n) {
+  for (let i = 1; i <= n; i++)
+    console.log(i % 15 === 0 ? 'FizzBuzz' : i % 3 === 0 ? 'Fizz' : i % 5 === 0 ? 'Buzz' : i);
+}
+
+const fib = (n, m = {}) => n < 2 ? n : m[n] ??= fib(n - 1, m) + fib(n - 2, m);
+
+function balanced(s) {
+  const pairs = { ')': '(', ']': '[', '}': '{' }, st = [];
+  for (const ch of s) {
+    if ('([{'.includes(ch)) st.push(ch);
+    else if (pairs[ch] && st.pop() !== pairs[ch]) return false;
+  }
+  return st.length === 0;
+}
+
+const binarySearch = (arr, t) => {
+  let lo = 0, hi = arr.length - 1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (arr[mid] === t) return mid;
+    arr[mid] < t ? (lo = mid + 1) : (hi = mid - 1);
+  }
+  return -1;
+};
+</script>
+
+<script type="text/plain" data-cat="Tooling" data-title="Git commands and GitHub Actions workflow" data-note="JD prefers GitHub Actions. Know branching, rebase vs merge, PRs.">
+# Everyday Git
+git checkout -b feature/login
+git add -p && git commit -m "feat: add login form"
+git fetch origin && git rebase origin/main
+git push -u origin feature/login
+git stash / git stash pop
+git log --oneline --graph
+git revert <sha>              # safe undo on shared branches
+git reset --hard HEAD~1       # local only, destructive
+git cherry-pick <sha>
+
+# .github/workflows/ci.yml
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test -- --ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with: { name: dist, path: dist }
+</script>
+
+<script type="text/plain" data-cat="Tooling" data-title="Testing a component (React Testing Library)" data-note="Test behaviour, not implementation.">
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+
+test('adds a todo', () => {
+  render(<Todos />);
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Learn React' } });
+  fireEvent.click(screen.getByText('Add'));
+  expect(screen.getByText('Learn React')).toBeInTheDocument();
+});
+
+test('shows users after fetch', async () => {
+  global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => [{ id: 1, name: 'Asha' }] });
+  render(<Users />);
+  expect(screen.getByText(/loading/i)).toBeInTheDocument();
+  await waitFor(() => expect(screen.getByText('Asha')).toBeInTheDocument());
+});
+</script>
+
+<script type="text/plain" data-cat="Concepts" data-title="Questions they may ask verbally (one-line answers)" data-note="Be ready to answer these in under 30 seconds each.">
+Virtual DOM vs real DOM
+  Diff of a lightweight tree; React batches the minimal real DOM updates.
+Why keys in lists?
+  Stable identity lets reconciliation reuse, move or remove the right nodes.
+Controlled vs uncontrolled
+  Controlled: React state owns the value. Uncontrolled: DOM owns it, read via ref.
+useEffect vs useLayoutEffect
+  Layout runs synchronously after DOM mutation, before paint. Use for measurements.
+Why does my effect see a stale value?
+  Closure captured an old render. Fix with correct deps or a functional update.
+State vs props / lifting state up
+  Props flow down and are read-only. Share state through the nearest common parent.
+useRef uses
+  DOM access and mutable values that persist without triggering re-render.
+Context vs Redux
+  Context is for low-frequency values. Redux adds devtools, middleware and predictable updates.
+Reconciliation and Fiber
+  Incremental, interruptible rendering that enables concurrent features.
+React 18 features
+  Automatic batching, useTransition, useDeferredValue, Suspense for data.
+JWT in localStorage vs httpOnly cookie
+  localStorage is exposed to XSS. httpOnly cookie is safe from JS but needs CSRF protection.
+REST verbs
+  GET read, POST create, PUT replace, PATCH partial update, DELETE remove. Idempotent: GET, PUT, DELETE.
+What does Webpack do?
+  Bundles modules, transforms with loaders, code-splits, tree-shakes, and serves HMR in dev.
+</script>
+
+<script>
+(function(){
+  var blocks = Array.prototype.slice.call(document.querySelectorAll('script[type="text/plain"]'));
+  var list = document.getElementById('list'), chips = document.getElementById('chips');
+  var cats = ['All'], active = 'All';
+  var data = blocks.map(function(b){
+    var c = b.dataset.cat; if (cats.indexOf(c) < 0) cats.push(c);
+    return { cat: c, title: b.dataset.title, note: b.dataset.note, code: b.textContent.replace(/^\n/, '').replace(/\s+$/, '') };
+  });
+  data.forEach(function(d){
+    var s = document.createElement('section');
+    s.innerHTML = '<span class="tag"></span><h3></h3><p></p><div class="wrap"><button class="copy" type="button">Copy</button><pre><code></code></pre></div>';
+    s.querySelector('.tag').textContent = d.cat;
+    s.querySelector('h3').textContent = d.title;
+    s.querySelector('p').textContent = d.note;
+    s.querySelector('code').textContent = d.code;
+    var btn = s.querySelector('.copy');
+    btn.onclick = function(){
+      var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1200); };
+      try { navigator.clipboard.writeText(d.code).then(done, function(){ btn.textContent = 'Select and copy'; }); }
+      catch (e) { btn.textContent = 'Select and copy'; }
+    };
+    d.el = s; list.appendChild(s);
+  });
+  cats.forEach(function(c){
+    var b = document.createElement('button');
+    b.className = 'chip' + (c === 'All' ? ' on' : ''); b.type = 'button'; b.textContent = c;
+    b.onclick = function(){
+      active = c;
+      Array.prototype.forEach.call(chips.children, function(x){ x.classList.toggle('on', x === b); });
+      apply();
+    };
+    chips.appendChild(b);
+  });
+  var q = document.getElementById('q');
+  q.addEventListener('input', apply);
+  function apply(){
+    var t = q.value.trim().toLowerCase(), shown = 0;
+    data.forEach(function(d){
+      var ok = (active === 'All' || d.cat === active) &&
+        (!t || (d.title + ' ' + d.note + ' ' + d.code + ' ' + d.cat).toLowerCase().indexOf(t) >= 0);
+      d.el.classList.toggle('hide', !ok); if (ok) shown++;
+    });
+    document.getElementById('empty').classList.toggle('hide', shown > 0);
+  }
+})();
+</script>
+</body>
+</html>
